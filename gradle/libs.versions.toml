@@ -47,7 +47,7 @@ coil-network = "3.3.0"
 moko = "0.19.1"
 buildkonfig = "0.17.1"
 
-projectApplicationId = "com.plcoding.chirp"
+projectApplicationId = "de.mindmarket.chirp"
 projectVersionName = "1.0"
 projectMinSdkVersion = "26"
 projectTargetSdkVersion = "36"
@@ -156,6 +156,7 @@ androidx-runner = { group = "androidx.test", name = "runner", version.ref = "run
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 
 [plugins]
+convention-android-application = {id = "de.mindmarket.convention.android.application", version = "unspecified"}
 
 # Android
 android-application = { id = "com.android.application", version.ref = "agp" }
