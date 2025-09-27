@@ -38,5 +38,10 @@ gradlePlugin {
             id = "de.mindmarket.convention.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
+
+        register("androidComposeApplication") {
+            id = "de.mindmarket.convention.android.application.compose"
+            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
     }
 }
