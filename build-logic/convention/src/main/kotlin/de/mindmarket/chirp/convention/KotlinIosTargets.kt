@@ -5,7 +5,7 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 internal fun Project.configureIosTargets() {
-    extensions.configure<KotlinMultiplatformExtension>() {
+    extensions.configure<KotlinMultiplatformExtension> {
         listOf(
             iosX64(),
             iosArm64(),
