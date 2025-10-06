@@ -54,5 +54,15 @@ gradlePlugin {
             id = "de.mindmarket.convention.kmp.library"
             implementationClass = "KmpLibraryConventionPlugin"
         }
+
+        register("cmpLibrary") {
+            id = "de.mindmarket.convention.cmp.library"
+            implementationClass = "CmpLibraryConventionPlugin"
+        }
+
+        register("cmpFeature") {
+            id = "de.mindmarket.convention.cmp.feature"
+            implementationClass = "CmpFeatureConventionPlugin"
+        }
     }
 }
