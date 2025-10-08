@@ -171,6 +171,7 @@ convention-kmp-library = {id = "de.mindmarket.convention.kmp.library", version =
 convention-cmp-library = {id = "de.mindmarket.convention.cmp.library", version = "unspecified"}
 convention-cmp-feature = {id = "de.mindmarket.convention.cmp.feature", version = "unspecified"}
 convention-buildkonfig = {id = "de.mindmarket.convention.buildkonfig", version = "unspecified"}
+convention-room = {id = "de.mindmarket.convention.room", version = "unspecified"}
 
 # Android
 android-application = { id = "com.android.application", version.ref = "agp" }
