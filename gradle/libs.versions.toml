@@ -47,6 +47,7 @@ coil = "3.3.0"
 coil-network = "3.3.0"
 moko = "0.19.1"
 buildkonfig = "0.17.1"
+kermit = "2.0.8"
 
 projectApplicationId = "de.mindmarket.chirp"
 projectVersionName = "1.0"
@@ -135,6 +136,9 @@ moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "mok
 moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko" }
 moko-permissions-notifications = { module = "dev.icerock.moko:permissions-notifications", version.ref = "moko" }
 
+# Logging
+touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+
 android-desugarJdkLibs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
@@ -164,14 +168,14 @@ androidx-runner = { group = "androidx.test", name = "runner", version.ref = "run
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 
 [plugins]
-convention-android-application = {id = "de.mindmarket.convention.android.application", version = "unspecified"}
-convention-android-application-compose = {id = "de.mindmarket.convention.android.application.compose", version = "unspecified"}
-convention-cmp-application = {id = "de.mindmarket.convention.cmp.application", version = "unspecified"}
-convention-kmp-library = {id = "de.mindmarket.convention.kmp.library", version = "unspecified"}
-convention-cmp-library = {id = "de.mindmarket.convention.cmp.library", version = "unspecified"}
-convention-cmp-feature = {id = "de.mindmarket.convention.cmp.feature", version = "unspecified"}
-convention-buildkonfig = {id = "de.mindmarket.convention.buildkonfig", version = "unspecified"}
-convention-room = {id = "de.mindmarket.convention.room", version = "unspecified"}
+convention-android-application = { id = "de.mindmarket.convention.android.application", version = "unspecified" }
+convention-android-application-compose = { id = "de.mindmarket.convention.android.application.compose", version = "unspecified" }
+convention-cmp-application = { id = "de.mindmarket.convention.cmp.application", version = "unspecified" }
+convention-kmp-library = { id = "de.mindmarket.convention.kmp.library", version = "unspecified" }
+convention-cmp-library = { id = "de.mindmarket.convention.cmp.library", version = "unspecified" }
+convention-cmp-feature = { id = "de.mindmarket.convention.cmp.feature", version = "unspecified" }
+convention-buildkonfig = { id = "de.mindmarket.convention.buildkonfig", version = "unspecified" }
+convention-room = { id = "de.mindmarket.convention.room", version = "unspecified" }
 
 # Android
 android-application = { id = "com.android.application", version.ref = "agp" }
