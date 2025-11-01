@@ -64,7 +64,6 @@ fun ChirpTextField(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
                 ) {
                     if (state.text.isEmpty() && placeholder != null) {
                         Text(

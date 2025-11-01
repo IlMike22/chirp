@@ -16,6 +16,10 @@ kotlin {
                 implementation(projects.feature.auth.domain)
                 implementation(projects.core.presentation)
                 implementation(projects.core.designsystem)
+
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+
             }
         }
 
