@@ -3,19 +3,33 @@ package de.mindmarket.auth.presentation.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import chirp.feature.auth.presentation.generated.resources.Res
+import chirp.feature.auth.presentation.generated.resources.error_account_exists
 import chirp.feature.auth.presentation.generated.resources.error_invalid_email
 import chirp.feature.auth.presentation.generated.resources.error_invalid_password
 import chirp.feature.auth.presentation.generated.resources.error_invalid_username
 import de.mindmarket.auth.domain.EmailValidator
+import de.mindmarket.core.domain.auth.AuthService
+import de.mindmarket.core.domain.util.DataError
+import de.mindmarket.core.domain.util.onFailure
+import de.mindmarket.core.domain.util.onSuccess
 import de.mindmarket.core.domain.validation.PasswordValidator
 import de.mindmarket.core.presentation.util.UiText
+import de.mindmarket.core.presentation.util.toUiText
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class RegisterViewModel() : ViewModel() {
+class RegisterViewModel(
+    private val authService: AuthService
+) : ViewModel() {
+    private val eventChannel = Channel<RegisterEvent>()
+    val events = eventChannel.receiveAsFlow()
+
     private val _state = MutableStateFlow(RegisterState())
     val state = _state
         .onStart {
@@ -29,8 +43,58 @@ class RegisterViewModel() : ViewModel() {
 
     fun onAction(action: RegisterAction) {
         when (action) {
-            RegisterAction.OnLoginClick -> validateFormInputs()
+            RegisterAction.OnLoginClick -> Unit
+            RegisterAction.OnRegisterClick -> register()
+            RegisterAction.OnTogglePasswordVisibleClick -> {
+                _state.update { it.copy(
+                    isPasswordVisible = !it.isPasswordVisible
+                ) }
+            }
             else -> Unit
+        }
+    }
+
+    private fun register() {
+        if (!validateFormInputs()) {
+            return
+        }
+
+        viewModelScope.launch {
+
+            _state.update {
+                it.copy(
+                    isRegistering = true
+                )
+            }
+            val email = state.value.emailTextState.text.toString()
+            val username = state.value.usernameTextState.text.toString()
+            val password = state.value.passwordTextState.text.toString()
+
+            authService
+                .register(
+                    email = email,
+                    username = username,
+                    password = password
+                )
+                .onSuccess {
+                    _state.update {
+                        it.copy(
+                            isRegistering = false
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    val registrationError = when (error) {
+                        DataError.Remote.CONFLICT -> UiText.Resource(Res.string.error_account_exists)
+                        else -> error.toUiText()
+                    }
+                    _state.update {
+                        it.copy(
+                            isRegistering = false,
+                            registrationError = registrationError
+                        )
+                    }
+                }
         }
     }
 
