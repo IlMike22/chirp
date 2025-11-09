@@ -16,5 +16,5 @@ data class RegisterState(
     val registrationError: UiText? = null,
     val isRegistering: Boolean = false,
     val canRegister: Boolean = false,
-    val isPasswordVisible:Boolean = false
+    val isPasswordVisible: Boolean = false
 )
