@@ -1,7 +1,7 @@
 package de.mindmarket.chirp
 
 import androidx.compose.runtime.Composable
-import de.mindmarket.auth.presentation.register.RegisterRoot
+import de.mindmarket.auth.presentation.register_success.RegisterSuccessRoot
 import de.mindmarket.core.designsystem.theme.ChirpTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -9,8 +9,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     ChirpTheme {
-        RegisterRoot(
-            onRegisterSuccess = {}
-        )
+        RegisterSuccessRoot()
     }
 }
