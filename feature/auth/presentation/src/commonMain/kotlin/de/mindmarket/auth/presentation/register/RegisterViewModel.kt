@@ -121,6 +121,7 @@ class RegisterViewModel(
                             isRegistering = false
                         )
                     }
+                    eventChannel.send(RegisterEvent.Success(email))
                 }
                 .onFailure { error ->
                     val registrationError = when (error) {
