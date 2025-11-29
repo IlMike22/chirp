@@ -1,5 +1,6 @@
 package de.mindmarket.core.data.auth
 
+import de.mindmarket.core.data.dto.requests.EmailRequest
 import de.mindmarket.core.data.dto.requests.RegisterRequest
 import de.mindmarket.core.data.networking.post
 import de.mindmarket.core.domain.auth.AuthService
@@ -22,6 +23,13 @@ class KtorAuthService(
                 username = username,
                 password = password
             )
+        )
+    }
+
+    override suspend fun resendVerificationEmail(email: String): EmptyResult<DataError.Remote> {
+        return httpClient.post(
+            route = "/auth/resend-verification",
+            body = EmailRequest(email)
         )
     }
 }
