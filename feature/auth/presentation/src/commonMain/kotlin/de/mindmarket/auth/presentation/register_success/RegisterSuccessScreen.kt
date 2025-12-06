@@ -17,7 +17,7 @@ import de.mindmarket.core.designsystem.components.brand.ChirpSuccessIcon
 import de.mindmarket.core.designsystem.components.buttons.ChirpButton
 import de.mindmarket.core.designsystem.components.buttons.ChirpButtonStyle
 import de.mindmarket.core.designsystem.components.layouts.ChirpAdaptiveResultLayout
-import de.mindmarket.core.designsystem.components.layouts.ChirpSimpleSuccessLayout
+import de.mindmarket.core.designsystem.components.layouts.ChirpSimpleResultLayout
 import de.mindmarket.core.designsystem.components.layouts.ChirpSnackbarScaffold
 import de.mindmarket.core.designsystem.theme.ChirpTheme
 import de.mindmarket.core.presentation.util.ObserveAsEvents
@@ -62,7 +62,7 @@ fun RegisterSuccessScreen(
         snackbarHostState = snackbarHostState
     ) {
         ChirpAdaptiveResultLayout {
-            ChirpSimpleSuccessLayout(
+            ChirpSimpleResultLayout(
                 title = stringResource(Res.string.account_successfully_created),
                 description = stringResource(
                     Res.string.verification_email_sent_to_x, state.registeredEmail
