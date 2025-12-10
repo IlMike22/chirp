@@ -2,6 +2,7 @@ package de.mindmarket.core.data.auth
 
 import de.mindmarket.core.data.dto.requests.EmailRequest
 import de.mindmarket.core.data.dto.requests.RegisterRequest
+import de.mindmarket.core.data.networking.get
 import de.mindmarket.core.data.networking.post
 import de.mindmarket.core.domain.auth.AuthService
 import de.mindmarket.core.domain.util.DataError
@@ -30,6 +31,13 @@ class KtorAuthService(
         return httpClient.post(
             route = "/auth/resend-verification",
             body = EmailRequest(email)
+        )
+    }
+
+    override suspend fun verifyEmail(token: String): EmptyResult<DataError.Remote> {
+        return httpClient.get(
+            route = "/auth/verify",
+            queryParams = mapOf("token" to token)
         )
     }
 }
