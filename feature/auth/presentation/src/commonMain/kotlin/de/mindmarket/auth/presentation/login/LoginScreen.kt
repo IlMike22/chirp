@@ -25,7 +25,6 @@ import chirp.feature.auth.presentation.generated.resources.login
 import chirp.feature.auth.presentation.generated.resources.password
 import chirp.feature.auth.presentation.generated.resources.welcome_back
 import de.mindmarket.auth.presentation.register.LoginViewModel
-import de.mindmarket.auth.presentation.register.RegisterEvent
 import de.mindmarket.core.designsystem.components.brand.ChirpBrandLogo
 import de.mindmarket.core.designsystem.components.buttons.ChirpButton
 import de.mindmarket.core.designsystem.components.buttons.ChirpButtonStyle
@@ -49,13 +48,19 @@ fun LoginRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            LoginEvent.Success -> onLoginSuccess()
+        }
+    }
+
     LoginScreen(
         state = state,
         onAction = { action ->
             when (action) {
                 LoginAction.OnForgotPasswordClick -> onForgotPasswordClick()
                 LoginAction.OnSignUpClick -> onCreateAccountClick()
-                else ->Unit
+                else -> Unit
             }
 
             viewModel.onAction(action)

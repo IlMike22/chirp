@@ -4,18 +4,16 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import chirp.feature.auth.presentation.generated.resources.Res
-import chirp.feature.auth.presentation.generated.resources.error_account_exists
-import chirp.feature.auth.presentation.generated.resources.error_invalid_email
-import chirp.feature.auth.presentation.generated.resources.error_invalid_password
-import chirp.feature.auth.presentation.generated.resources.error_invalid_username
+import chirp.feature.auth.presentation.generated.resources.error_email_not_verified
+import chirp.feature.auth.presentation.generated.resources.error_invalid_credentials
 import de.mindmarket.auth.domain.EmailValidator
 import de.mindmarket.auth.presentation.login.LoginAction
+import de.mindmarket.auth.presentation.login.LoginEvent
 import de.mindmarket.auth.presentation.login.LoginState
 import de.mindmarket.core.domain.auth.AuthService
 import de.mindmarket.core.domain.util.DataError
 import de.mindmarket.core.domain.util.onFailure
 import de.mindmarket.core.domain.util.onSuccess
-import de.mindmarket.core.domain.validation.PasswordValidator
 import de.mindmarket.core.presentation.util.UiText
 import de.mindmarket.core.presentation.util.toUiText
 import kotlinx.coroutines.channels.Channel
@@ -34,7 +32,7 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val authService: AuthService
 ) : ViewModel() {
-    private val eventChannel = Channel<RegisterEvent>()
+    private val eventChannel = Channel<LoginEvent>()
     val events = eventChannel.receiveAsFlow()
 
     private val _state = MutableStateFlow(LoginState())
@@ -51,25 +49,28 @@ class LoginViewModel(
     private val isEmailValidFlow = snapshotFlow { state.value.emailTextFieldState.text.toString() }
         .map { email -> EmailValidator.validate(email) }
         .distinctUntilChanged()
-    private val isPasswordValidFlow = snapshotFlow { state.value.passwordTextFieldState.text.toString() }
-        .map { password -> PasswordValidator.validate(password).isValidPassword }
+
+    private val isPasswordNotBlankFlow = snapshotFlow {
+        state.value.passwordTextFieldState.text.toString()
+    }
+        .map { it.isNotBlank() }
         .distinctUntilChanged()
 
-    private val isRegisteringFlow = state
+    private val isLoggingInFlow = state
         .map { it.isLoggingIn }
         .distinctUntilChanged()
 
     private fun observeValidationStates() {
         combine(
             isEmailValidFlow,
-            isPasswordValidFlow,
-            isRegisteringFlow
-        ) { isEmailValid, isPasswordValid, isRegistering ->
+            isPasswordNotBlankFlow,
+            isLoggingInFlow
+        ) { isEmailValid, isPasswordNotBlank, isLoggingIn ->
             _state.update {
                 it.copy(
-                    canLogin = !isRegistering
+                    canLogin = isPasswordNotBlank
                             && isEmailValid
-                            && isPasswordValid
+                            && !isLoggingIn
                 )
             }
         }.launchIn(viewModelScope)
@@ -85,13 +86,53 @@ class LoginViewModel(
                     )
                 }
             }
+
             else -> Unit
         }
     }
 
     private fun login() {
-        if (!validateFormInputs()) {
+        if (!state.value.canLogin) {
             return
+        }
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isLoggingIn = true
+                )
+            }
+
+            val email = state.value.emailTextFieldState.text.toString()
+            val password = state.value.passwordTextFieldState.text.toString()
+
+            authService.login(
+                email = email,
+                password = password
+            )
+                .onSuccess { authInfo ->
+                    _state.update {
+                        it.copy(
+                            error = null,
+                            isLoggingIn = false
+                        )
+                    }
+
+                    eventChannel.send(LoginEvent.Success)
+                }
+                .onFailure { error ->
+                    val errorMessage = when (error) {
+                        DataError.Remote.UNAUTHORIZED -> UiText.Resource(Res.string.error_invalid_credentials)
+                        DataError.Remote.FORBIDDEN -> UiText.Resource(Res.string.error_email_not_verified)
+                        else -> error.toUiText()
+                    }
+
+                    _state.update {
+                        it.copy(
+                            error = errorMessage,
+                            isLoggingIn = false
+                        )
+                    }
+                }
         }
 
         viewModelScope.launch {
@@ -100,69 +141,6 @@ class LoginViewModel(
                     isLoggingIn = true
                 )
             }
-            val email = state.value.emailTextFieldState.text.toString()
-            val password = state.value.passwordTextFieldState.text.toString()
-
-//            authService
-//                .login(
-//                    email = email,
-//                    password = password
-//                )
-//                .onSuccess {
-//                    _state.update {
-//                        it.copy(
-//                            isLoggingIn = false
-//                        )
-//                    }
-//                    eventChannel.send(RegisterEvent.Success(email))
-//                }
-//                .onFailure { error ->
-//                    val registrationError = when (error) {
-//                        DataError.Remote.CONFLICT -> UiText.Resource(Res.string.error_account_exists)
-//                        else -> error.toUiText()
-//                    }
-//                    _state.update {
-//                        it.copy(
-//                            isLoggingIn = false,
-//                            error = registrationError
-//                        )
-//                    }
-//                }
         }
-    }
-
-    private fun clearAllTextFieldErrors() {
-        _state.update {
-            it.copy(
-                error = null
-            )
-        }
-    }
-
-    private fun validateFormInputs(): Boolean {
-        clearAllTextFieldErrors()
-
-        val currentState = state.value
-        val email = currentState.emailTextFieldState.text.toString()
-        val password = currentState.passwordTextFieldState.text.toString()
-
-        val isEmailValid = EmailValidator.validate(email)
-        val passwordValidationState = PasswordValidator.validate(password)
-
-        val emailError = if (!isEmailValid) {
-            UiText.Resource(Res.string.error_invalid_email)
-        } else null
-
-        val passwordError = if (!passwordValidationState.isValidPassword) {
-            UiText.Resource(Res.string.error_invalid_password)
-        } else null
-
-        _state.update {
-            it.copy(
-                error = emailError
-            )
-        }
-
-        return isEmailValid && passwordValidationState.isValidPassword
     }
 }

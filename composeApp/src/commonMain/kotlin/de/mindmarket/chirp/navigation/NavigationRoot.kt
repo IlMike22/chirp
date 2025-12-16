@@ -3,8 +3,11 @@ package de.mindmarket.chirp.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import de.mindmarket.auth.presentation.navigation.AuthGraphRoutes
 import de.mindmarket.auth.presentation.navigation.authGraph
+import de.mindmarket.chat.presentation.chat_list.ChatListRoute
+import de.mindmarket.chat.presentation.chat_list.ChatListScreenRoot
 
 @Composable
 fun NavigationRoot(navController: NavHostController) {
@@ -14,7 +17,16 @@ fun NavigationRoot(navController: NavHostController) {
     ) {
         authGraph(
             navController = navController,
-            onLoginSuccess = {}
+            onLoginSuccess = {
+                navController.navigate(ChatListRoute) {
+                    popUpTo(AuthGraphRoutes.Graph) {
+                        inclusive = true
+                    }
+                }
+            }
         )
+        composable<ChatListRoute> {
+            ChatListScreenRoot()
+        }
     }
 }
