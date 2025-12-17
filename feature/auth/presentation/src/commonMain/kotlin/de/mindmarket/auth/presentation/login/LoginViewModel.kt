@@ -1,4 +1,4 @@
-package de.mindmarket.auth.presentation.register
+package de.mindmarket.auth.presentation.login
 
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
@@ -7,10 +7,8 @@ import chirp.feature.auth.presentation.generated.resources.Res
 import chirp.feature.auth.presentation.generated.resources.error_email_not_verified
 import chirp.feature.auth.presentation.generated.resources.error_invalid_credentials
 import de.mindmarket.auth.domain.EmailValidator
-import de.mindmarket.auth.presentation.login.LoginAction
-import de.mindmarket.auth.presentation.login.LoginEvent
-import de.mindmarket.auth.presentation.login.LoginState
 import de.mindmarket.core.domain.auth.AuthService
+import de.mindmarket.core.domain.auth.SessionStorage
 import de.mindmarket.core.domain.util.DataError
 import de.mindmarket.core.domain.util.onFailure
 import de.mindmarket.core.domain.util.onSuccess
@@ -30,7 +28,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val sessionStorage: SessionStorage
 ) : ViewModel() {
     private val eventChannel = Channel<LoginEvent>()
     val events = eventChannel.receiveAsFlow()
@@ -110,6 +109,8 @@ class LoginViewModel(
                 password = password
             )
                 .onSuccess { authInfo ->
+                    sessionStorage.set(authInfo)
+
                     _state.update {
                         it.copy(
                             error = null,

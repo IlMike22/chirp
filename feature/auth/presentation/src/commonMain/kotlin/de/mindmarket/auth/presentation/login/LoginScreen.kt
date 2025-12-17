@@ -24,7 +24,6 @@ import chirp.feature.auth.presentation.generated.resources.forgot_password
 import chirp.feature.auth.presentation.generated.resources.login
 import chirp.feature.auth.presentation.generated.resources.password
 import chirp.feature.auth.presentation.generated.resources.welcome_back
-import de.mindmarket.auth.presentation.register.LoginViewModel
 import de.mindmarket.core.designsystem.components.brand.ChirpBrandLogo
 import de.mindmarket.core.designsystem.components.buttons.ChirpButton
 import de.mindmarket.core.designsystem.components.buttons.ChirpButtonStyle
