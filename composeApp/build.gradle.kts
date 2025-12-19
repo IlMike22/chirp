@@ -36,6 +36,8 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.jetbrains.compose.viewmodel)
             implementation(libs.jetbrains.lifecycle.compose)
+
+            implementation(libs.bundles.koin.common)
         }
     }
 }
