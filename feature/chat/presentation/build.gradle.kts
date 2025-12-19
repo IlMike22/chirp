@@ -15,6 +15,8 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(projects.core.designsystem)
                 implementation(projects.feature.chat.domain)
+
+                implementation(libs.bundles.koin.common)
             }
         }
 
@@ -36,5 +38,4 @@ kotlin {
             }
         }
     }
-
 }

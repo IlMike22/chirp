@@ -10,6 +10,7 @@ import de.mindmarket.chat.presentation.chat_list.ChatListRoute
 import de.mindmarket.chirp.navigation.DeepLinkListener
 import de.mindmarket.chirp.navigation.NavigationRoot
 import de.mindmarket.core.designsystem.theme.ChirpTheme
+import de.mindmarket.core.presentation.util.ObserveAsEvents
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -27,6 +28,18 @@ fun App(
     LaunchedEffect(state.isCheckingAuth) {
         if (!state.isCheckingAuth) {
             onAuthenticationChecked()
+        }
+    }
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            MainEvent.OnSessionExpired -> {
+                navController.navigate(AuthGraphRoutes.Graph) {
+                    popUpTo(AuthGraphRoutes.Graph) {
+                        inclusive = false
+                    }
+                }
+            }
         }
     }
 
