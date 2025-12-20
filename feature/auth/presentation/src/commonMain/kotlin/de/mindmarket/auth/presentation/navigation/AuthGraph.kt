@@ -10,6 +10,7 @@ import de.mindmarket.auth.presentation.forgot_password.ForgotPasswordScreenRoot
 import de.mindmarket.auth.presentation.login.LoginRoot
 import de.mindmarket.auth.presentation.register.RegisterRoot
 import de.mindmarket.auth.presentation.register_success.RegisterSuccessRoot
+import de.mindmarket.auth.presentation.reset_password.ResetPasswordScreenRoot
 
 fun NavGraphBuilder.authGraph(
     navController: NavController,
@@ -51,6 +52,18 @@ fun NavGraphBuilder.authGraph(
         }
         composable<AuthGraphRoutes.ForgotPassword> {
             ForgotPasswordScreenRoot()
+        }
+        composable<AuthGraphRoutes.ResetPassword>(
+            deepLinks = listOf(
+                navDeepLink {
+                    this.uriPattern = "https://chirp.pl-coding.com/api/auth/reset-password?token={token}"
+                },
+                navDeepLink {
+                    this.uriPattern = "chirp://chirp.pl-coding.com/api/auth/reset-password?token={token}"
+                }
+            )
+        ) {
+            ResetPasswordScreenRoot()
         }
         composable<AuthGraphRoutes.RegisterSuccess> {
             RegisterSuccessRoot(
