@@ -16,7 +16,7 @@ sealed interface AuthGraphRoutes {
     data class RegisterSuccess(val email: String) : AuthGraphRoutes
 
     @Serializable
-    data object ForgetPassword : AuthGraphRoutes
+    data object ForgotPassword : AuthGraphRoutes
 
     @Serializable
     data object ResetPassword : AuthGraphRoutes

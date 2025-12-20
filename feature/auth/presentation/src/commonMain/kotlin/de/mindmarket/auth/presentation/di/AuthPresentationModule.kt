@@ -1,6 +1,7 @@
 package de.mindmarket.auth.presentation.di
 
 import de.mindmarket.auth.presentation.email_verification.EmailVerificationViewModel
+import de.mindmarket.auth.presentation.forgot_password.ForgotPasswordViewModel
 import de.mindmarket.auth.presentation.login.LoginViewModel
 import de.mindmarket.auth.presentation.register.RegisterViewModel
 import de.mindmarket.auth.presentation.register_success.RegisterSuccessViewModel
@@ -12,4 +13,5 @@ val authPresentationModule = module {
     viewModelOf(::RegisterSuccessViewModel)
     viewModelOf(::EmailVerificationViewModel)
     viewModelOf(::LoginViewModel)
+    viewModelOf(::ForgotPasswordViewModel)
 }

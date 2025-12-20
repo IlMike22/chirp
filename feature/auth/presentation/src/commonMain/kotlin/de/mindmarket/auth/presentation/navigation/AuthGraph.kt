@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import de.mindmarket.auth.presentation.email_verification.EmailVerificationScreenRoot
+import de.mindmarket.auth.presentation.forgot_password.ForgotPasswordScreenRoot
 import de.mindmarket.auth.presentation.login.LoginRoot
 import de.mindmarket.auth.presentation.register.RegisterRoot
 import de.mindmarket.auth.presentation.register_success.RegisterSuccessRoot
@@ -21,7 +22,7 @@ fun NavGraphBuilder.authGraph(
             LoginRoot(
                 onLoginSuccess = onLoginSuccess,
                 onForgotPasswordClick = {
-                    navController.navigate(AuthGraphRoutes.ForgetPassword)
+                    navController.navigate(AuthGraphRoutes.ForgotPassword)
                 },
                 onCreateAccountClick = {
                     navController.navigate(AuthGraphRoutes.Register) {
@@ -48,7 +49,9 @@ fun NavGraphBuilder.authGraph(
                 }
             )
         }
-        composable<AuthGraphRoutes.ForgetPassword> {  }
+        composable<AuthGraphRoutes.ForgotPassword> {
+            ForgotPasswordScreenRoot()
+        }
         composable<AuthGraphRoutes.RegisterSuccess> {
             RegisterSuccessRoot(
                 onLoginClick = {
