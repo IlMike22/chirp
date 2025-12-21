@@ -45,7 +45,6 @@ fun LoginRoot(
     onCreateAccountClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
@@ -64,8 +63,7 @@ fun LoginRoot(
 
             viewModel.onAction(action)
 
-        },
-        snackbarHostState = snackbarHostState
+        }
     )
 
 }
@@ -73,12 +71,9 @@ fun LoginRoot(
 @Composable
 fun LoginScreen(
     state: LoginState,
-    onAction: (LoginAction) -> Unit,
-    snackbarHostState: SnackbarHostState
+    onAction: (LoginAction) -> Unit
 ) {
-    ChirpSnackbarScaffold(
-        snackbarHostState = snackbarHostState
-    ) {
+    ChirpSnackbarScaffold {
         ChirpAdaptiveFormLayout(
             headerText = stringResource(Res.string.welcome_back),
             errorText = state.error?.asString(),
@@ -158,8 +153,7 @@ private fun LoginScreenPreview() {
     ChirpTheme {
         LoginScreen(
             state = LoginState(),
-            onAction = {},
-            snackbarHostState = remember { SnackbarHostState() }
+            onAction = {}
         )
     }
 }
@@ -170,8 +164,7 @@ private fun LoginScreenDarkPreview() {
     ChirpTheme(darkTheme = true) {
         LoginScreen(
             state = LoginState(),
-            onAction = {},
-            snackbarHostState = remember { SnackbarHostState() }
+            onAction = {}
         )
     }
 }

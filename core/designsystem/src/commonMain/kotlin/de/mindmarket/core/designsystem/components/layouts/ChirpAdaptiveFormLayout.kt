@@ -30,6 +30,7 @@ import de.mindmarket.core.designsystem.components.brand.ChirpBrandLogo
 import de.mindmarket.core.designsystem.theme.ChirpTheme
 import de.mindmarket.core.designsystem.theme.extended
 import de.mindmarket.core.presentation.util.DeviceConfiguration
+import de.mindmarket.core.presentation.util.clearFocusOnTap
 import de.mindmarket.core.presentation.util.currentDeviceConfiguration
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -50,6 +51,7 @@ fun ChirpAdaptiveFormLayout(
         DeviceConfiguration.MOBILE_PORTRAIT -> {
             ChirpSurface(
                 modifier = modifier
+                    .clearFocusOnTap()
                     .consumeWindowInsets(WindowInsets.navigationBars)
                     .consumeWindowInsets(WindowInsets.displayCutout),
                 header = {
