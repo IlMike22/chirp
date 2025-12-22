@@ -99,6 +99,7 @@ fun ChirpChatBubble(
             modifier = Modifier
                 .fillMaxWidth()
         )
+
         messageStatus?.invoke()
     }
 }
@@ -108,7 +109,7 @@ fun ChirpChatBubble(
 fun ChirpChatBubbleLeftPreview() {
     ChirpTheme(darkTheme = true) {
         ChirpChatBubble(
-            messageContent = "Hello world. This is a longer text since we want to text if everything looks good.",
+            messageContent = "Hello world. This is a longer text since we want to text if everything looks good. Now we can see if even a longer text does look good.",
             sender = "IlMike",
             formattedDateTime = "Friday 2:20pm",
             trianglePosition = TrianglePosition.LEFT,
@@ -124,7 +125,7 @@ fun ChirpChatBubbleLeftPreview() {
 fun ChirpChatBubbleRightPreview() {
     ChirpTheme {
         ChirpChatBubble(
-            messageContent = "Hello world. This is a longer text since we want to text if everything looks good.",
+            messageContent = "Hello world. This is a longer text since we want to text if everything looks good. Now we can see if even a longer text does look good.",
             sender = "IlMike",
             formattedDateTime = "Friday 2:20pm",
             trianglePosition = TrianglePosition.RIGHT,
