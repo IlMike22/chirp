@@ -112,7 +112,7 @@ fun DestructiveConfirmationDialog(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview
 fun DestructiveConfirmationDialogPreview() {
     ChirpTheme {
         DestructiveConfirmationDialog(
@@ -128,7 +128,7 @@ fun DestructiveConfirmationDialogPreview() {
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview
 fun DestructiveConfirmationDialogPreviewDark() {
     ChirpTheme(darkTheme = true) {
         DestructiveConfirmationDialog(
