@@ -1,6 +1,6 @@
 package de.mindmarket.core.designsystem.components.avatar
 
-data class AvatarUi(
+data class ChatParticipantUi(
     val id: String,
     val username: String,
     val initials: String,

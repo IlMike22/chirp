@@ -12,7 +12,6 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
-import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,7 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import de.mindmarket.chat.presentation.create_chat.CreateChatScreenRoot
 import de.mindmarket.core.designsystem.theme.extended
+import de.mindmarket.core.presentation.util.DialogSheetScopedViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -63,7 +64,12 @@ fun ChatListDetailAdaptiveLayout(
                             style = MaterialTheme.typography.labelSmall,
                             modifier = Modifier
                                 .clickable {
-                                    chatListDetailViewModel.onAction(ChatListDetailAction.OnChatClick(chatIndex.toString()))
+                                    chatListDetailViewModel.onAction(ChatListDetailAction.OnCreateChatClick)
+                                    chatListDetailViewModel.onAction(
+                                        ChatListDetailAction.OnChatClick(
+                                            chatIndex.toString()
+                                        )
+                                    )
                                     scope.launch {
                                         scaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                                     }
@@ -87,4 +93,10 @@ fun ChatListDetailAdaptiveLayout(
             }
         }
     )
+
+    DialogSheetScopedViewModel(
+        visible = sharedState.dialogState is DialogState.CreateChat
+    ) {
+        CreateChatScreenRoot()
+    }
 }
