@@ -25,6 +25,7 @@ import de.mindmarket.chat.presentation.components.ChatParticipantSearchTextSecti
 import de.mindmarket.chat.presentation.components.ChatParticipantsSelectionSection
 import de.mindmarket.chat.presentation.components.ManageChatButtonSection
 import de.mindmarket.chat.presentation.components.ManageChatHeaderRow
+
 import de.mindmarket.core.designsystem.components.brand.ChirpHorizontalDivider
 import de.mindmarket.core.designsystem.components.buttons.ChirpButton
 import de.mindmarket.core.designsystem.components.buttons.ChirpButtonStyle
@@ -38,20 +39,24 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun CreateChatScreenRoot(
-    viewModel: CreateChatViewModel = koinViewModel(),
-    modifier: Modifier = Modifier
+fun CreateChatRoot(
+    onDismiss: () -> Unit,
+    viewModel: CreateChatViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ChirpAdaptiveDialogSheetLayout(
-        onDismiss = {
-            viewModel.onAction(CreateChatAction.OnDismissDialog)
-        }
+        onDismiss = onDismiss
     ) {
         CreateChatScreen(
             state = state,
-            onAction = viewModel::onAction
+            onAction = { action ->
+                when(action) {
+                    CreateChatAction.OnDismissDialog -> onDismiss()
+                    else -> Unit
+                }
+                viewModel.onAction(action)
+            }
         )
     }
 }
@@ -59,7 +64,7 @@ fun CreateChatScreenRoot(
 @Composable
 fun CreateChatScreen(
     state: CreateChatState,
-    onAction: (CreateChatAction) -> Unit
+    onAction: (CreateChatAction) -> Unit,
 ) {
     var isTextFieldFocused by remember { mutableStateOf(false) }
     val imeHeight = WindowInsets.ime.getBottom(LocalDensity.current)
@@ -67,8 +72,7 @@ fun CreateChatScreen(
     val configuration = currentDeviceConfiguration()
 
     val shouldHideHeader = configuration == DeviceConfiguration.MOBILE_LANDSCAPE
-            || (isKeyboardVisible && configuration != DeviceConfiguration.DESKTOP)
-            || isTextFieldFocused
+            || (isKeyboardVisible && configuration != DeviceConfiguration.DESKTOP) || isTextFieldFocused
 
     Column(
         modifier = Modifier
@@ -90,65 +94,60 @@ fun CreateChatScreen(
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 ChirpHorizontalDivider()
-
-                ChatParticipantSearchTextSection(
-                    queryState = state.queryTextState,
-                    onAddClick = {
-                        onAction(CreateChatAction.OnAddClick)
-                    },
-                    isSearchEnabled = state.canAddParticipant,
-                    isLoading = state.isAddingParticipant,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    error = state.searchError,
-                    onFocusChanged = {
-                        isTextFieldFocused = it
-                    }
-                )
-
-                ChirpHorizontalDivider()
-
-                ChatParticipantsSelectionSection(
-                    selectedChatParticipants = state.selectedChatParticipants,
-                    modifier = Modifier.fillMaxWidth(),
-                    searchResult = state.currentSearchResult
-                )
-
-                ChirpHorizontalDivider()
-
-                ManageChatButtonSection(
-                    primaryButton = {
-                        ChirpButton(
-                            text = stringResource(Res.string.create_chat),
-                            style = ChirpButtonStyle.PRIMARY,
-                            onClick = {
-                                onAction(CreateChatAction.OnCreateChatClick)
-                            },
-                            enabled = state.selectedChatParticipants.isNotEmpty(),
-                            isLoading = state.isCreatingChat
-                        )
-                    },
-                    secondaryButton = {
-                        ChirpButton(
-                            text = stringResource(Res.string.cancel),
-                            style = ChirpButtonStyle.SECONDARY,
-                            onClick = {
-                                onAction(CreateChatAction.OnDismissDialog)
-                            },
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
             }
         }
+        ChatParticipantSearchTextSection(
+            queryState = state.queryTextState,
+            onAddClick = {
+                onAction(CreateChatAction.OnAddClick)
+            },
+            isSearchEnabled = state.canAddParticipant,
+            isLoading = state.isSearching,
+            modifier = Modifier
+                .fillMaxWidth(),
+            error = state.searchError,
+            onFocusChanged = {
+                isTextFieldFocused = it
+            }
+        )
+        ChirpHorizontalDivider()
+
+        ChatParticipantsSelectionSection(
+            selectedChatParticipants = state.selectedChatParticipants,
+            modifier = Modifier
+                .fillMaxWidth(),
+            searchResult = state.currentSearchResult
+        )
+        ChirpHorizontalDivider()
+        ManageChatButtonSection(
+            primaryButton = {
+                ChirpButton(
+                    text = stringResource(Res.string.create_chat),
+                    onClick = {
+                        onAction(CreateChatAction.OnCreateChatClick)
+                    },
+                    enabled = state.selectedChatParticipants.isNotEmpty(),
+                    isLoading = state.isCreatingChat
+                )
+            },
+            secondaryButton = {
+                ChirpButton(
+                    text = stringResource(Res.string.cancel),
+                    onClick = {
+                        onAction(CreateChatAction.OnDismissDialog)
+                    },
+                    style = ChirpButtonStyle.SECONDARY
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
-@Composable
 @Preview
-fun CreateChatScreenPreview() {
+@Composable
+private fun Preview() {
     ChirpTheme {
         CreateChatScreen(
             state = CreateChatState(),

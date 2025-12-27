@@ -1,6 +1,7 @@
 package de.mindmarket.chirp.di
 
 import de.mindmarket.auth.presentation.di.authPresentationModule
+import de.mindmarket.chat.data.di.chatDataModule
 import de.mindmarket.chat.presentation.chat_list.di.chatPresentationModule
 import de.mindmarket.core.data.di.coreDataModule
 import de.mindmarket.core.presentation.di.corePresentationModule
@@ -15,7 +16,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             authPresentationModule,
             appModule,
             chatPresentationModule,
-            corePresentationModule
+            corePresentationModule,
+            chatDataModule
         )
     }
 }

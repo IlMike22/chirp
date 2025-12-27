@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import de.mindmarket.chat.presentation.create_chat.CreateChatScreenRoot
+import de.mindmarket.chat.presentation.create_chat.CreateChatRoot
 import de.mindmarket.core.designsystem.theme.extended
 import de.mindmarket.core.presentation.util.DialogSheetScopedViewModel
 import kotlinx.coroutines.launch
@@ -97,6 +97,12 @@ fun ChatListDetailAdaptiveLayout(
     DialogSheetScopedViewModel(
         visible = sharedState.dialogState is DialogState.CreateChat
     ) {
-        CreateChatScreenRoot()
+        CreateChatRoot(
+            onDismiss = {
+                chatListDetailViewModel.onAction(
+                    ChatListDetailAction.OnDismissCurrentDialog
+                )
+            }
+        )
     }
 }
