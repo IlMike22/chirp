@@ -1,5 +1,6 @@
 package de.mindmarket.core.designsystem.components.textfields
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
@@ -31,7 +32,7 @@ fun ChirpTextField(
     singleLine: Boolean = false,
     enabled: Boolean = true,
     keyboardType: KeyboardType = KeyboardType.Text,
-    onFocusChanged: (Boolean) -> Unit = {}
+    onFocusChanged: (Boolean) -> Unit = {},
 ) {
     ChirpTextFieldLayout(
         title = title,
@@ -44,11 +45,11 @@ fun ChirpTextField(
         BasicTextField(
             state = state,
             enabled = enabled,
-            lineLimits = if (singleLine) {
+            lineLimits = if(singleLine) {
                 TextFieldLineLimits.SingleLine
             } else TextFieldLineLimits.Default,
             textStyle = MaterialTheme.typography.bodyMedium.copy(
-                color = if (enabled) {
+                color = if(enabled) {
                     MaterialTheme.colorScheme.onSurface
                 } else {
                     MaterialTheme.colorScheme.extended.textPlaceholder
@@ -66,35 +67,16 @@ fun ChirpTextField(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.CenterStart
                 ) {
-                    if (state.text.isEmpty() && placeholder != null) {
+                    if(state.text.isEmpty() && placeholder != null) {
                         Text(
                             text = placeholder,
                             color = MaterialTheme.colorScheme.extended.textPlaceholder,
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
+                    innerBox()
                 }
-                innerBox()
             }
-        )
-    }
-}
-
-
-@Composable
-@Preview(
-    showBackground = true
-)
-fun ChirpTextFieldPreview() {
-    ChirpTheme {
-        ChirpTextField(
-            state = rememberTextFieldState(),
-            modifier = Modifier
-                .width(300.dp),
-            placeholder = "Test@test.com",
-            supportingText = "please enter your email",
-            isError = false,
-            title = "Email"
         )
     }
 }

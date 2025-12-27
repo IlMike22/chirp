@@ -49,7 +49,7 @@ fun CreateChatRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserveAsEvents(viewModel.events) { event ->
-        when (event) {
+        when(event) {
             is CreateChatEvent.OnChatCreated -> onChatCreated(event.chat)
         }
     }
@@ -121,7 +121,6 @@ fun CreateChatScreen(
             }
         )
         ChirpHorizontalDivider()
-
         ChatParticipantsSelectionSection(
             selectedChatParticipants = state.selectedChatParticipants,
             modifier = Modifier
@@ -149,6 +148,7 @@ fun CreateChatScreen(
                     style = ChirpButtonStyle.SECONDARY
                 )
             },
+            error = state.createChatError?.asString(),
             modifier = Modifier.fillMaxWidth()
         )
     }

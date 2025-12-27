@@ -3,6 +3,7 @@ package de.mindmarket.chat.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +32,7 @@ fun ChatParticipantSearchTextSection(
     onFocusChanged: (Boolean) -> Unit
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .padding(
                 horizontal = 20.dp,
                 vertical = 16.dp
@@ -41,24 +42,22 @@ fun ChatParticipantSearchTextSection(
     ) {
         ChirpTextField(
             state = queryState,
-            modifier = modifier
+            modifier = Modifier
                 .weight(1f),
             placeholder = stringResource(Res.string.email_or_username),
             title = null,
-            enabled = true,
-            singleLine = true,
             supportingText = error?.asString(),
             isError = error != null,
+            singleLine = true,
             keyboardType = KeyboardType.Email,
             onFocusChanged = onFocusChanged
         )
-
         ChirpButton(
             text = stringResource(Res.string.add),
             onClick = onAddClick,
             style = ChirpButtonStyle.SECONDARY,
             enabled = isSearchEnabled,
-            isLoading = isLoading
+            isLoading = isLoading,
         )
     }
 }
@@ -66,7 +65,7 @@ fun ChatParticipantSearchTextSection(
 @Composable
 @Preview
 fun ChatParticipantSearchTextSectionPreview() {
-    ChirpTheme(darkTheme = true) {
+    ChirpTheme {
         ChatParticipantSearchTextSection(
             queryState = TextFieldState("blubb"),
             onAddClick = {},

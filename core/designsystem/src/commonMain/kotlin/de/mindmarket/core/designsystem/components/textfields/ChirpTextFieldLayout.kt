@@ -74,21 +74,21 @@ fun ChirpTextFieldLayout(
                 color = MaterialTheme.colorScheme.extended.textSecondary
             )
             Spacer(Modifier.height(8.dp))
+        }
 
-            textField(textFieldStyleModifier, interactionSource)
+        textField(textFieldStyleModifier, interactionSource)
 
-            if (supportingText != null) {
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = supportingText,
-                    color = if (isError) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        MaterialTheme.colorScheme.extended.textTertiary
-                    },
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
+        if (supportingText != null) {
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = supportingText,
+                color = if (isError) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.extended.textTertiary
+                },
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }
