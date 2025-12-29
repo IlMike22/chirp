@@ -7,4 +7,7 @@
     <string name="group_chat">Group chat</string>
     <string name="you">You, </string>
     <string name="error_participant_not_found">No participant found.</string>
+    <string name="chirp_app_name">Chirp</string>
+    <string name="profile_settings">Profile settings</string>
+    <string name="logout">Logout</string>
 </resources>
