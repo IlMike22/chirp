@@ -23,4 +23,11 @@
     <string name="chat_members">Chat members</string>
     <string name="leave_chat">Leave chat</string>
     <string name="open_chat_options_menu">Open chat</string>
+    <string name="offline">Offline</string>
+    <string name="reconnecting">Reconnecting..</string>
+    <string name="online">Online</string>
+    <string name="error_network">Network error</string>
+    <string name="error_unknown">Unknown error</string>
+    <string name="send">Send</string>
+    <string name="send_a_message">Send a message</string>
 </resources>
