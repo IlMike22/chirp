@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import de.mindmarket.core.designsystem.components.buttons.ChirpButton
 import de.mindmarket.core.designsystem.theme.ChirpTheme
 import de.mindmarket.core.designsystem.theme.extended
+import io.ktor.client.request.invoke
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -34,6 +36,7 @@ fun ChirpMultiLineTextField(
     modifier: Modifier = Modifier,
     placeholder: String? = null,
     enabled: Boolean = true,
+    maxHeightInLines: Int = 3,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onKeyboardAction: () -> Unit = {},
     bottomContent: @Composable (RowScope.() -> Unit)? = null
@@ -57,11 +60,13 @@ fun ChirpMultiLineTextField(
     ) {
         BasicTextField(
             state = state,
-            modifier = Modifier
-                .weight(1f),
             enabled = enabled,
             textStyle = MaterialTheme.typography.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.extended.textPrimary
+            ),
+            lineLimits = TextFieldLineLimits.MultiLine(
+                minHeightInLines = 1,
+                maxHeightInLines = maxHeightInLines
             ),
             keyboardOptions = keyboardOptions,
             onKeyboardAction = {

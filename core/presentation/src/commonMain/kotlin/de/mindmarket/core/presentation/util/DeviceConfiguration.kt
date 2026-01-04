@@ -7,6 +7,7 @@ import androidx.window.core.layout.WindowSizeClass.Companion.HEIGHT_DP_EXPANDED_
 import androidx.window.core.layout.WindowSizeClass.Companion.HEIGHT_DP_MEDIUM_LOWER_BOUND
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_EXPANDED_LOWER_BOUND
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
+import kotlin.coroutines.EmptyCoroutineContext.get
 
 @Composable
 fun currentDeviceConfiguration(): DeviceConfiguration {
@@ -23,6 +24,9 @@ enum class DeviceConfiguration {
 
     val isMobile: Boolean
         get() = this in listOf(MOBILE_LANDSCAPE, MOBILE_PORTRAIT)
+
+    val isWideScreen: Boolean
+        get() = this in listOf(TABLET_LANDSCAPE, DESKTOP)
 
     companion object {
         fun fromWindowSizeClass(windowSizeClass: WindowSizeClass): DeviceConfiguration {

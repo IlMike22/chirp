@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import de.mindmarket.chat.domain.models.ChatMessageDeliveryStatus
 import de.mindmarket.chat.presentation.model.MessageUi
+import de.mindmarket.chat.presentation.util.getChatBubbleColorForUser
 import de.mindmarket.core.designsystem.components.avatar.ChatParticipantUi
 import de.mindmarket.core.designsystem.theme.ChirpTheme
 import de.mindmarket.core.designsystem.theme.extended
@@ -52,7 +53,8 @@ fun MessageListItemUi(
             }
             is MessageUi.OtherUserMessage -> {
                 OtherUserMessage(
-                    message = messageUi
+                    message = messageUi,
+                    color = getChatBubbleColorForUser(messageUi.sender.id)
                 )
             }
         }
