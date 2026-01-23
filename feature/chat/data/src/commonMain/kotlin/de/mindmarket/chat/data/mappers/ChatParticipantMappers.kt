@@ -1,6 +1,7 @@
 package de.mindmarket.chat.data.mappers
 
 import de.mindmarket.chat.data.dto.ChatParticipantDto
+import de.mindmarket.chat.database.entities.ChatParticipantEntity
 import de.mindmarket.chat.domain.models.ChatParticipant
 
 fun ChatParticipantDto.toDomain(): ChatParticipant =
@@ -16,3 +17,12 @@ fun ChatParticipant.toData(): ChatParticipantDto =
         username = username,
         profilePictureUrl = profilePictureUrl
     )
+
+fun ChatParticipant.toEntity(): ChatParticipantEntity =
+    ChatParticipantEntity(
+        userId = userId,
+        username = username,
+        profilePictureUrl = profilePictureUrl
+    )
+
+

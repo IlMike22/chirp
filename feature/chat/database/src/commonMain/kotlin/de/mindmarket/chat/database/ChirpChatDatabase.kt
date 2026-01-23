@@ -27,7 +27,7 @@ abstract class ChirpChatDatabase: RoomDatabase() {
     abstract val chatDao: ChatDao
     abstract val chatParticipantDao: ChatParticipantDao
     abstract val chatMessageDao: ChatMessageDao
-    abstract val participantsCrossRefDao: ChatParticipantsCrossRefDao
+    abstract val chatParticipantsCrossRefDao: ChatParticipantsCrossRefDao
 
     companion object {
         const val DB_NAME = "chirp.db"

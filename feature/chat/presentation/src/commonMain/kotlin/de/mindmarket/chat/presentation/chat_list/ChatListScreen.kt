@@ -34,6 +34,7 @@ import chirp.feature.chat.presentation.generated.resources.logout
 import chirp.feature.chat.presentation.generated.resources.no_chats
 import chirp.feature.chat.presentation.generated.resources.no_chats_subtitle
 import de.mindmarket.chat.domain.models.ChatMessage
+import de.mindmarket.chat.domain.models.ChatMessageDeliveryStatus
 import de.mindmarket.chat.presentation.chat_list.components.ChatListHeader
 import de.mindmarket.chat.presentation.chat_list.components.ChatListItemUi
 import de.mindmarket.chat.presentation.components.EmptyListSection
@@ -212,9 +213,9 @@ fun ChatListScreenPreview() {
                             senderId = "Uta",
                             createdAt = Clock.System.now(),
                             content = "This is the last message from Uta. You can see the details of that message by clicking",
+                            deliveryStatus = ChatMessageDeliveryStatus.SENT
                         ),
                         lastMessageSenderUsername = "Uta"
-
                     )
                 )
             ),

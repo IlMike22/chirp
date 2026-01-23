@@ -28,6 +28,7 @@ import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.group_chat
 import chirp.feature.chat.presentation.generated.resources.you
 import de.mindmarket.chat.domain.models.ChatMessage
+import de.mindmarket.chat.domain.models.ChatMessageDeliveryStatus
 import de.mindmarket.chat.domain.models.ChatParticipant
 import de.mindmarket.chat.presentation.components.ChatItemHeaderRow
 import de.mindmarket.chat.presentation.model.ChatUi
@@ -77,7 +78,7 @@ fun ChatListItemUi(
                             color = MaterialTheme.colorScheme.extended.textSecondary,
                         )
                     ) {
-                        append(chat.lastMessageSenderUsername + ":")
+                        append(chat.lastMessageSenderUsername + ": ")
                     }
                     append(chat.lastMessage.content)
                 }
@@ -119,7 +120,8 @@ fun ChatListItemPreview() {
                     chatId = "1",
                     content = "This is the last message I send you. It goes over multiple lines to show the Ellupses",
                     createdAt = Clock.System.now(),
-                    senderId = "2"
+                    senderId = "2",
+                    deliveryStatus = ChatMessageDeliveryStatus.SENT
                 ),
                 lastMessageSenderUsername = "Klothilde",
             ),

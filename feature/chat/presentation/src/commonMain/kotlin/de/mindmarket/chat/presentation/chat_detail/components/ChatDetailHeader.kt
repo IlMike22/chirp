@@ -27,6 +27,7 @@ import chirp.feature.chat.presentation.generated.resources.leave_chat
 import chirp.feature.chat.presentation.generated.resources.open_chat_options_menu
 import chirp.feature.chat.presentation.generated.resources.users_icon
 import de.mindmarket.chat.domain.models.ChatMessage
+import de.mindmarket.chat.domain.models.ChatMessageDeliveryStatus
 import de.mindmarket.chat.presentation.components.ChatHeader
 import de.mindmarket.chat.presentation.components.ChatItemHeaderRow
 import de.mindmarket.chat.presentation.model.ChatUi
@@ -154,7 +155,8 @@ fun ChatListDetailHeaderUiPreview() {
                             chatId = "1",
                             content = "This is the last message I send you. It goes over multiple lines to show the Ellupses",
                             createdAt = Clock.System.now(),
-                            senderId = "2"
+                            senderId = "2",
+                            deliveryStatus = ChatMessageDeliveryStatus.SENT
                         ),
                         lastMessageSenderUsername = "Klothilde"),
                     isDetailPresent = false,

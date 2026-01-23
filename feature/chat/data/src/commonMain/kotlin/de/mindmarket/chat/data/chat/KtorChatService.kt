@@ -5,6 +5,7 @@ import de.mindmarket.chat.data.dto.request.CreateChatRequest
 import de.mindmarket.chat.data.mappers.toDomain
 import de.mindmarket.chat.domain.chat.ChatService
 import de.mindmarket.chat.domain.models.Chat
+import de.mindmarket.core.data.networking.get
 import de.mindmarket.core.data.networking.post
 import de.mindmarket.core.domain.util.DataError
 import de.mindmarket.core.domain.util.Result
@@ -22,6 +23,14 @@ class KtorChatService(
             )
         ).map { chatDto ->
             chatDto.toDomain()
+        }
+    }
+
+    override suspend fun getChats(): Result<List<Chat>, DataError.Remote> {
+        return httpClient.get<List<ChatDto>>(
+            route = "/chat"
+        ).map { chatDtos ->
+            chatDtos.map { it.toDomain() }
         }
     }
 }

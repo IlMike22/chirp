@@ -265,6 +265,7 @@ fun ChatDetailMessagesPreview() {
                         senderId = "Uta",
                         createdAt = Clock.System.now(),
                         content = "This is the last message from Uta. You can see the details of that message by clicking",
+                        deliveryStatus = ChatMessageDeliveryStatus.SENT
                     ),
                     lastMessageSenderUsername = "Uta"
 
