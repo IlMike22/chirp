@@ -37,3 +37,13 @@ fun ChatMessage.toLastMessageView(): LastMessageView =
         timestamp = createdAt.toEpochMilliseconds(),
         deliveryStatus = deliveryStatus.name
     )
+
+fun ChatMessageEntity.toDomain(): ChatMessage =
+    ChatMessage(
+        id = chatId,
+        chatId = chatId,
+        content = content,
+        createdAt = Instant.fromEpochMilliseconds(timestamp),
+        senderId = senderId,
+        deliveryStatus = ChatMessageDeliveryStatus.SENT
+    )
