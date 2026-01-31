@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.error_participant_not_found
 import de.mindmarket.chat.domain.chat.ChatParticipantService
-import de.mindmarket.chat.domain.chat.ChatService
+import de.mindmarket.chat.domain.chat.ChatRepository
 import de.mindmarket.chat.presentation.mappers.toUi
 import de.mindmarket.core.domain.util.DataError
 import de.mindmarket.core.domain.util.onFailure
@@ -30,7 +30,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class CreateChatViewModel(
     private val chatParticipantService: ChatParticipantService,
-    private val chatService: ChatService
+    private val chatRepository: ChatRepository
 ) : ViewModel() {
     private var hasLoadedInitialData: Boolean = false
 
@@ -81,7 +81,7 @@ class CreateChatViewModel(
                 )
             }
 
-            chatService
+            chatRepository
                 .createChat(userIds)
                 .onSuccess { chat ->
                     _state.update {
