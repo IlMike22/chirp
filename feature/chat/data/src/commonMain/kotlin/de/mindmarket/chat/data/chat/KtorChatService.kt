@@ -5,10 +5,13 @@ import de.mindmarket.chat.data.dto.request.CreateChatRequest
 import de.mindmarket.chat.data.mappers.toDomain
 import de.mindmarket.chat.domain.chat.ChatService
 import de.mindmarket.chat.domain.models.Chat
+import de.mindmarket.core.data.networking.delete
 import de.mindmarket.core.data.networking.get
 import de.mindmarket.core.data.networking.post
 import de.mindmarket.core.domain.util.DataError
+import de.mindmarket.core.domain.util.EmptyResult
 import de.mindmarket.core.domain.util.Result
+import de.mindmarket.core.domain.util.asEmptyResult
 import de.mindmarket.core.domain.util.map
 import io.ktor.client.HttpClient
 
@@ -38,5 +41,11 @@ class KtorChatService(
         return httpClient.get<ChatDto>(
             route = "/chat/$chatId"
         ).map { it.toDomain() }
+    }
+
+    override suspend fun leaveChat(chatId: String): EmptyResult<DataError.Remote> {
+       return httpClient.delete<Unit>(
+           route = "/chat/$chatId/leave"
+       ).asEmptyResult()
     }
 }
