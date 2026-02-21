@@ -8,6 +8,8 @@ import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.error_participant_not_found
 import de.mindmarket.chat.domain.chat.ChatParticipantService
 import de.mindmarket.chat.domain.chat.ChatRepository
+import de.mindmarket.chat.presentation.components.manage_chat.ManageChatAction
+import de.mindmarket.chat.presentation.components.manage_chat.ManageChatState
 import de.mindmarket.chat.presentation.mappers.toUi
 import de.mindmarket.core.domain.util.DataError
 import de.mindmarket.core.domain.util.onFailure
@@ -37,7 +39,7 @@ class CreateChatViewModel(
     private val eventChannel = Channel<CreateChatEvent>()
     val events = eventChannel.receiveAsFlow()
 
-    private val _state = MutableStateFlow(CreateChatState())
+    private val _state = MutableStateFlow(ManageChatState())
 
     @OptIn(FlowPreview::class)
     private val searchFlow = snapshotFlow { _state.value.queryTextState.text.toString() }
@@ -56,13 +58,13 @@ class CreateChatViewModel(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = CreateChatState()
+            initialValue = ManageChatState()
         )
 
-    fun onAction(action: CreateChatAction) {
+    fun onAction(action: ManageChatAction) {
         when (action) {
-            CreateChatAction.OnAddClick -> addParticipant()
-            CreateChatAction.OnCreateChatClick -> createChat()
+            ManageChatAction.OnAddClick -> addParticipant()
+            ManageChatAction.OnPrimaryActionClick -> createChat()
             else -> Unit
         }
     }

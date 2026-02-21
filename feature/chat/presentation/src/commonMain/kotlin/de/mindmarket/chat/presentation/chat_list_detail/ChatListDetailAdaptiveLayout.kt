@@ -18,6 +18,7 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.mindmarket.chat.presentation.chat_detail.ChatDetailRoot
 import de.mindmarket.chat.presentation.chat_list.ChatListScreenRoot
+import de.mindmarket.chat.presentation.components.manage_chat.ManageChatRoot
 import de.mindmarket.chat.presentation.create_chat.CreateChatRoot
 import de.mindmarket.core.designsystem.theme.extended
 import de.mindmarket.core.presentation.util.DialogSheetScopedViewModel
@@ -84,6 +85,9 @@ fun ChatListDetailAdaptiveLayout(
                 ChatDetailRoot(
                     chatId = sharedState.selectedChatId,
                     isDetailPresent = detailPane == PaneAdaptedValue.Expanded && listPane == PaneAdaptedValue.Expanded,
+                    onChatMembersClick = {
+                        chatListDetailViewModel.onAction(ChatListDetailAction.OnManageChatClick)
+                    },
                     onBack = {
                         scope.launch {
                             if (scaffoldNavigator.canNavigateBack()) {
@@ -107,6 +111,20 @@ fun ChatListDetailAdaptiveLayout(
                 scope.launch {
                     scaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                 }
+            },
+            onDismiss = {
+                chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
+            }
+        )
+    }
+
+    DialogSheetScopedViewModel(
+        visible = sharedState.dialogState is DialogState.ManageChat
+    ) {
+        ManageChatRoot(
+            onMembersAdded = {
+                chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
+
             },
             onDismiss = {
                 chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)

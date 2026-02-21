@@ -32,4 +32,5 @@
     <string name="error_unknown">Unknown error</string>
     <string name="send">Send</string>
     <string name="send_a_message">Send a message</string>
+    <string name="save">Save</string>
 </resources>

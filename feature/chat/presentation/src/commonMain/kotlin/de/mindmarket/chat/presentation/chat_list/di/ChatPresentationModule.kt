@@ -4,6 +4,7 @@ import de.mindmarket.chat.presentation.chat_detail.ChatDetailViewModel
 import de.mindmarket.chat.presentation.chat_list.ChatListViewModel
 import de.mindmarket.chat.presentation.chat_list_detail.ChatListDetailViewModel
 import de.mindmarket.chat.presentation.create_chat.CreateChatViewModel
+import de.mindmarket.chat.presentation.manage_chat.ManageChatViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -12,4 +13,5 @@ val chatPresentationModule = module {
     viewModelOf(::ChatListDetailViewModel)
     viewModelOf(::CreateChatViewModel)
     viewModelOf(::ChatDetailViewModel)
+    viewModelOf(::ManageChatViewModel)
 }
