@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,11 +44,16 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ManageChatRoot(
+    chatId: String?,
     onMembersAdded: () -> Unit,
     onDismiss: () -> Unit,
     viewModel: ManageChatViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(chatId) {
+        viewModel.onAction(ManageChatAction.ChatParticipants.OnSelectChat(chatId))
+    }
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
@@ -143,7 +149,7 @@ fun ManageChatScreen(
                         onAction(ManageChatAction.OnPrimaryActionClick)
                     },
                     enabled = state.selectedChatParticipants.isNotEmpty(),
-                    isLoading = state.isCreatingChat
+                    isLoading = state.isSubmitting
                 )
             },
             secondaryButton = {
@@ -155,7 +161,7 @@ fun ManageChatScreen(
                     style = ChirpButtonStyle.SECONDARY
                 )
             },
-            error = state.createChatError?.asString(),
+            error = state.submitError?.asString(),
             modifier = Modifier.fillMaxWidth()
         )
     }

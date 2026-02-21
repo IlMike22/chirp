@@ -11,6 +11,7 @@ import de.mindmarket.chat.domain.chat.ChatRepository
 import de.mindmarket.chat.domain.chat.ChatService
 import de.mindmarket.chat.domain.models.Chat
 import de.mindmarket.chat.domain.models.ChatInfo
+import de.mindmarket.chat.domain.models.ChatParticipant
 import de.mindmarket.core.domain.util.DataError
 import de.mindmarket.core.domain.util.EmptyResult
 import de.mindmarket.core.domain.util.Result
@@ -65,6 +66,12 @@ class OfflineFirstChatRepository(
             .map { it.toDomain() }
     }
 
+    override fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipant>> {
+        return db.chatDao.getActiveParticipantsByChatId(chatId).map {participants ->
+            participants.map { it.toDomain() }
+        }
+    }
+
     override suspend fun fetchChats(): Result<List<Chat>, DataError.Remote> {
         return chatService
             .getChats()
@@ -116,6 +123,25 @@ class OfflineFirstChatRepository(
             .leaveChat(chatId)
             .onSuccess {
                 db.chatDao.deleteChatById(chatId)
+            }
+    }
+
+    override suspend fun addParticipantsToChat(
+        chatId: String,
+        userIds: List<String>
+    ): Result<Chat, DataError.Remote> {
+        return chatService
+            .addParticipantsToChat(
+                chatId = chatId,
+                userIds = userIds
+            )
+            .onSuccess { chat ->
+                db.chatDao.upsertChatParticipantsAndCrossRefs(
+                    chat = chat.toEntity(),
+                    participants = chat.participants.map { it.toEntity() },
+                    participantDao = db.chatParticipantDao,
+                    crossRefDao = db.chatParticipantsCrossRefDao
+                )
             }
     }
 
