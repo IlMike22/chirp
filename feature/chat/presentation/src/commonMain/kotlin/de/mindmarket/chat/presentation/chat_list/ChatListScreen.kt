@@ -37,7 +37,7 @@ import de.mindmarket.chat.domain.models.ChatMessage
 import de.mindmarket.chat.domain.models.ChatMessageDeliveryStatus
 import de.mindmarket.chat.presentation.chat_list.components.ChatListHeader
 import de.mindmarket.chat.presentation.chat_list.components.ChatListItemUi
-import de.mindmarket.chat.presentation.components.EmptyListSection
+import de.mindmarket.chat.presentation.components.EmptySection
 import de.mindmarket.chat.presentation.model.ChatUi
 import de.mindmarket.core.designsystem.components.avatar.ChatParticipantUi
 import de.mindmarket.core.designsystem.components.brand.ChirpHorizontalDivider
@@ -128,7 +128,7 @@ fun ChatListScreen(
                 }
 
                 state.chats.isEmpty() -> {
-                    EmptyListSection(
+                    EmptySection(
                         title = stringResource(Res.string.no_chats),
                         description = stringResource(Res.string.no_chats_subtitle),
                         modifier = Modifier

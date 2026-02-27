@@ -23,7 +23,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun EmptyListSection(
+fun EmptySection(
     title: String,
     description: String,
     modifier: Modifier = Modifier
@@ -63,7 +63,7 @@ fun EmptyListSection(
 @Preview
 fun EmptyChatSectionPreview() {
     ChirpTheme {
-        EmptyListSection(
+        EmptySection(
             title = "title",
             description = "description"
         )

@@ -15,11 +15,9 @@ import androidx.compose.ui.unit.dp
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.no_messages
 import chirp.feature.chat.presentation.generated.resources.no_messages_subtitle
-import de.mindmarket.chat.presentation.components.EmptyListSection
+import de.mindmarket.chat.presentation.components.EmptySection
 import de.mindmarket.chat.presentation.model.MessageUi
-import de.mindmarket.core.designsystem.theme.ChirpTheme
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MessageList(
@@ -37,7 +35,7 @@ fun MessageList(
                 .padding(vertical = 32.dp),
             contentAlignment = Alignment.Center
         ) {
-            EmptyListSection(
+            EmptySection(
                 title = stringResource(Res.string.no_messages),
                 description = stringResource(Res.string.no_messages_subtitle)
             )
