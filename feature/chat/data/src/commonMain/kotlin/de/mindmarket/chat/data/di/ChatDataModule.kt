@@ -20,6 +20,7 @@ val chatDataModule = module {
     singleOf(::KtorChatParticipantService) bind ChatParticipantService::class
     singleOf(::KtorChatService) bind ChatService::class
     singleOf(::OfflineFirstChatRepository) bind ChatRepository::class
+    singleOf(::OfflineFirstChatRepository) bind ChatRepository::class
 
     single {
         get<DatabaseFactory>()

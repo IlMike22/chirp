@@ -1,5 +1,6 @@
 package de.mindmarket.chat.data.chat
 
+import de.mindmarket.chat.data.lifecycle.AppLifecycleObserver
 import de.mindmarket.chat.data.mappers.toDomain
 import de.mindmarket.chat.data.mappers.toEntity
 import de.mindmarket.chat.data.mappers.toLastMessageView
@@ -17,18 +18,29 @@ import de.mindmarket.core.domain.util.EmptyResult
 import de.mindmarket.core.domain.util.Result
 import de.mindmarket.core.domain.util.asEmptyResult
 import de.mindmarket.core.domain.util.onSuccess
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.supervisorScope
 
 class OfflineFirstChatRepository(
     private val chatService: ChatService,
-    private val db: ChirpChatDatabase
+    private val db: ChirpChatDatabase,
+    private val observer: AppLifecycleObserver
 ) : ChatRepository {
+
+    init {
+        observer.isInForeground.onEach { isInForeground ->
+            println("Is app in foreground? $isInForeground")
+        }.launchIn(GlobalScope)
+    }
+
     override fun getChats(): Flow<List<Chat>> {
         return db.chatDao.getChatsWithParticipants()
             .map { allChatsWithParticipants ->
