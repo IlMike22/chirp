@@ -1,6 +1,5 @@
 package de.mindmarket.chat.data.network
 
-import co.touchlab.kermit.Logger.Companion.a
 import kotlinx.coroutines.delay
 import kotlin.math.pow
 
