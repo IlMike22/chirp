@@ -7,6 +7,7 @@ import de.mindmarket.chat.domain.models.ConnectionState
 import de.mindmarket.core.data.networking.UrlConstants
 import de.mindmarket.core.domain.auth.SessionStorage
 import de.mindmarket.core.domain.logging.ChirpLogger
+import de.mindmarket.core.domain.util.EmptyResult
 import de.mindmarket.core.domain.util.Result
 import de.mindmarket.feature.chat.data.BuildKonfig
 import io.ktor.client.HttpClient
@@ -16,6 +17,7 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
+import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -208,7 +210,7 @@ class KtorWebSocketConnector(
         }
     }
 
-    suspend fun sendMessage(message: String): Any? {
+    suspend fun sendMessage(message: String): EmptyResult<ConnectionError> {
         val connectionState = connectionState.value
 
         if (currentSession == null || connectionState != ConnectionState.CONNECTED) {

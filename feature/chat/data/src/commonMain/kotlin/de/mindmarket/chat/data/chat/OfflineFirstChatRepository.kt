@@ -1,6 +1,5 @@
 package de.mindmarket.chat.data.chat
 
-import de.mindmarket.chat.data.lifecycle.AppLifecycleObserver
 import de.mindmarket.chat.data.mappers.toDomain
 import de.mindmarket.chat.data.mappers.toEntity
 import de.mindmarket.chat.data.mappers.toLastMessageView
@@ -80,7 +79,7 @@ class OfflineFirstChatRepository(
     }
 
     override fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipant>> {
-        return db.chatDao.getActiveParticipantsByChatId(chatId).map {participants ->
+        return db.chatDao.getActiveParticipantsByChatId(chatId).map { participants ->
             participants.map { it.toDomain() }
         }
     }

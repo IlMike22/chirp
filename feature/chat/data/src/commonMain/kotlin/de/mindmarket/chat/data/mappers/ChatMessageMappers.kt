@@ -1,6 +1,8 @@
 package de.mindmarket.chat.data.mappers
 
 import de.mindmarket.chat.data.dto.ChatMessageDto
+import de.mindmarket.chat.data.dto.websocket.OutgoingWebSocket
+import de.mindmarket.chat.data.dto.websocket.OutgoingWebSocketType
 import de.mindmarket.chat.database.LastMessageView
 import de.mindmarket.chat.database.entities.ChatMessageEntity
 import de.mindmarket.chat.domain.models.ChatMessage
@@ -27,7 +29,6 @@ fun ChatMessage.toEntity(): ChatMessageEntity =
         deliveryStatus = deliveryStatus.name
     )
 
-
 fun ChatMessage.toLastMessageView(): LastMessageView =
     LastMessageView(
         messageId = id,
@@ -46,4 +47,11 @@ fun ChatMessageEntity.toDomain(): ChatMessage =
         createdAt = Instant.fromEpochMilliseconds(timestamp),
         senderId = senderId,
         deliveryStatus = ChatMessageDeliveryStatus.SENT
+    )
+
+fun ChatMessage.toNewMessage(): OutgoingWebSocket.NewMessage =
+    OutgoingWebSocket.NewMessage(
+        messageId = id,
+        chatId = chatId,
+        content = content,
     )
