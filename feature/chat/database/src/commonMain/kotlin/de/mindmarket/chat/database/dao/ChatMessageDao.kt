@@ -14,6 +14,9 @@ interface ChatMessageDao {
     @Upsert
     suspend fun upsertMessages(messages: List<ChatMessageEntity>)
 
+    @Query("DELETE FROM chatmessageentity WHERE messageId = :messageId")
+    suspend fun deleteMessageById(messageId: String)
+
     @Query("DELETE FROM chatmessageentity WHERE messageId IN (:messageIds)")
     suspend fun deleteMessageById(messageIds: List<String>)
 

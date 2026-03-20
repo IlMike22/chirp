@@ -29,7 +29,7 @@ sealed class IncomingWebSocketDto(
     ) : IncomingWebSocketDto(IncomingWebSocketType.MESSAGE_DELETED)
 
     @Serializable
-    data class ProfilePictureUpdated(
+    data class ProfilePictureUpdatedDto(
         val userId: String,
         val newUrl: String?
     ) : IncomingWebSocketDto(IncomingWebSocketType.PROFILE_PICTURE_UPDATED)
