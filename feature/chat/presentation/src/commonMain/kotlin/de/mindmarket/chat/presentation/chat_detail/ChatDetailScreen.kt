@@ -78,6 +78,9 @@ fun ChatDetailRoot(
             is ChatDetailEvent.OnError -> {
                 snackBarState.showSnackbar(event.error.asStringAsync())
             }
+            ChatDetailEvent.OnNewMessage -> {
+                // TODO autoscroll to bottom
+            }
         }
     }
 

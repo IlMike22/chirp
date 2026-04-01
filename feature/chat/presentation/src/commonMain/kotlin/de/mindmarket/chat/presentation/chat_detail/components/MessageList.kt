@@ -49,8 +49,7 @@ fun MessageList(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(
-                items = messages,
-                key = { it.id }
+                items = messages
             ) { message ->
                 MessageListItemUi(
                     messageUi = message,

@@ -18,7 +18,6 @@ import de.mindmarket.core.domain.util.EmptyResult
 import de.mindmarket.core.domain.util.Result
 import de.mindmarket.core.domain.util.asEmptyResult
 import de.mindmarket.core.domain.util.onSuccess
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
@@ -34,13 +33,6 @@ class OfflineFirstChatRepository(
     private val db: ChirpChatDatabase,
     private val observer: ConnectivityObserver
 ) : ChatRepository {
-
-    init {
-        observer.isConnected.onEach { isConnected ->
-            println("Is app connected? $isConnected")
-        }.launchIn(GlobalScope)
-    }
-
     override fun getChats(): Flow<List<Chat>> {
         return db.chatDao.getChatsWithParticipants()
             .map { allChatsWithParticipants ->

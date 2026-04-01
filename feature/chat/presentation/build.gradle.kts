@@ -24,6 +24,8 @@ kotlin {
                 implementation(libs.jetbrains.compose.backhandler)
                 implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
+
+                implementation(libs.kotlinx.datetime)
             }
         }
 
