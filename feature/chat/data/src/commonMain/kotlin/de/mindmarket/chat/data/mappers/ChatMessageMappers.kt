@@ -3,12 +3,12 @@ package de.mindmarket.chat.data.mappers
 import de.mindmarket.chat.data.dto.ChatMessageDto
 import de.mindmarket.chat.data.dto.websocket.IncomingWebSocketDto
 import de.mindmarket.chat.data.dto.websocket.OutgoingWebSocket
-import de.mindmarket.chat.data.dto.websocket.OutgoingWebSocketType
 import de.mindmarket.chat.database.LastMessageView
 import de.mindmarket.chat.database.entities.ChatMessageEntity
 import de.mindmarket.chat.domain.models.ChatMessage
 import de.mindmarket.chat.domain.models.ChatMessageDeliveryStatus
-import kotlinx.serialization.json.JsonNull.content
+import de.mindmarket.chat.domain.models.OutgoingNewMessage
+import kotlin.time.Clock
 import kotlin.time.Instant
 
 fun ChatMessageDto.toDomain(): ChatMessage =
@@ -67,3 +67,24 @@ fun IncomingWebSocketDto.NewMessageDto.toEntity(): ChatMessageEntity =
         timestamp = Instant.parse(createdAt).toEpochMilliseconds(),
         deliveryStatus = ChatMessageDeliveryStatus.SENT.name
     )
+
+fun OutgoingNewMessage.toWebSocketDto(): OutgoingWebSocket.NewMessage =
+    OutgoingWebSocket.NewMessage(
+        chatId = chatId,
+        messageId = messageId,
+        content = content
+    )
+
+fun OutgoingWebSocket.NewMessage.toEntity(
+    senderId: String,
+    deliveryStatus: ChatMessageDeliveryStatus
+): ChatMessageEntity =
+    ChatMessageEntity(
+        messageId = messageId,
+        chatId = chatId,
+        senderId = senderId,
+        content = content,
+        deliveryStatus = deliveryStatus.name,
+        timestamp = Clock.System.now().toEpochMilliseconds()
+    )
+

@@ -2,11 +2,11 @@ package de.mindmarket.chat.data.network
 
 import de.mindmarket.chat.data.dto.websocket.WebSocketMessageDto
 import de.mindmarket.chat.data.lifecycle.AppLifecycleObserver
-import de.mindmarket.chat.domain.error.ConnectionError
 import de.mindmarket.chat.domain.models.ConnectionState
 import de.mindmarket.core.data.networking.UrlConstants
 import de.mindmarket.core.domain.auth.SessionStorage
 import de.mindmarket.core.domain.logging.ChirpLogger
+import de.mindmarket.core.domain.util.DataError
 import de.mindmarket.core.domain.util.EmptyResult
 import de.mindmarket.core.domain.util.Result
 import de.mindmarket.feature.chat.data.BuildKonfig
@@ -210,11 +210,11 @@ class KtorWebSocketConnector(
         }
     }
 
-    suspend fun sendMessage(message: String): EmptyResult<ConnectionError> {
+    suspend fun sendMessage(message: String): EmptyResult<DataError.Connection> {
         val connectionState = connectionState.value
 
         if (currentSession == null || connectionState != ConnectionState.CONNECTED) {
-            return Result.Failure(ConnectionError.NOT_CONNECTED)
+            return Result.Failure(DataError.Connection.NOT_CONNECTED)
         }
 
         return try {
@@ -223,7 +223,7 @@ class KtorWebSocketConnector(
         } catch (exception: Exception) {
             coroutineContext.ensureActive()
             logger.error("Unable to send webSocket message, $exception")
-            Result.Failure(ConnectionError.MESSAGE_SENT_FAILED)
+            Result.Failure(DataError.Connection.MESSAGE_SENT_FAILED)
         }
     }
 }

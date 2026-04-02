@@ -1,12 +1,14 @@
 package de.mindmarket.chat.presentation.chat_detail
 
 import androidx.compose.foundation.text.input.clearText
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.mindmarket.chat.domain.chat.ChatConnectionClient
 import de.mindmarket.chat.domain.chat.ChatRepository
 import de.mindmarket.chat.domain.message.MessageRepository
 import de.mindmarket.chat.domain.models.ConnectionState
+import de.mindmarket.chat.domain.models.OutgoingNewMessage
 import de.mindmarket.chat.presentation.chat_detail.components.ChatDetailAction
 import de.mindmarket.chat.presentation.mappers.toUi
 import de.mindmarket.core.domain.auth.SessionStorage
@@ -29,6 +31,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class ChatDetailViewModel(
     private val chatRepository: ChatRepository,
@@ -44,6 +48,12 @@ class ChatDetailViewModel(
     private val _chatId = MutableStateFlow<String?>(null)
 
     private val _state = MutableStateFlow(ChatDetailState())
+
+    private val canSendMessage = snapshotFlow { state.value.messageTextFieldState.text.toString() }
+        .map { it.isBlank() }
+        .combine(connectionClient.connectionState) { isMessageBlank, connectionState ->
+            !isMessageBlank && connectionState == ConnectionState.CONNECTED
+        }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val chatInfoFlow = _chatId
@@ -80,6 +90,7 @@ class ChatDetailViewModel(
             if (!hasLoadedInitialData) {
                 observeConnectionState()
                 observeChatMessages()
+                observeCanSendMessage()
                 hasLoadedInitialData = true
             }
         }
@@ -102,7 +113,42 @@ class ChatDetailViewModel(
             is ChatDetailAction.OnMessageLongClick -> {}
             is ChatDetailAction.OnRetryClick -> {}
             ChatDetailAction.OnScrollToTop -> {}
-            ChatDetailAction.OnSendMessageClick -> {}
+            ChatDetailAction.OnSendMessageClick -> sendMessage()
+        }
+    }
+
+    private fun observeCanSendMessage() {
+        canSendMessage
+            .onEach { canSend ->
+                _state.update { it.copy(
+                    canSendMessage = canSend
+                ) }
+            }.launchIn(viewModelScope)
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    private fun sendMessage() {
+        val currentChatId = _chatId.value
+        val content = _state.value.messageTextFieldState.text.toString().trim()
+        if (content.isBlank() || currentChatId == null) {
+            return
+        }
+
+        viewModelScope.launch {
+            val message = OutgoingNewMessage(
+                chatId = currentChatId,
+                messageId = Uuid.random().toString(),
+                content = content
+            )
+
+            messageRepository
+                .sendMessage(message)
+                .onSuccess {
+                    state.value.messageTextFieldState.clearText()
+                }
+                .onFailure { error ->
+                    eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
+                }
         }
     }
 
