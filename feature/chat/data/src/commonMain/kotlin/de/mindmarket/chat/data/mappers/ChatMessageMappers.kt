@@ -2,7 +2,7 @@ package de.mindmarket.chat.data.mappers
 
 import de.mindmarket.chat.data.dto.ChatMessageDto
 import de.mindmarket.chat.data.dto.websocket.IncomingWebSocketDto
-import de.mindmarket.chat.data.dto.websocket.OutgoingWebSocket
+import de.mindmarket.chat.data.dto.websocket.OutgoingWebSocketDto
 import de.mindmarket.chat.database.LastMessageView
 import de.mindmarket.chat.database.entities.ChatMessageEntity
 import de.mindmarket.chat.domain.models.ChatMessage
@@ -43,16 +43,16 @@ fun ChatMessage.toLastMessageView(): LastMessageView =
 
 fun ChatMessageEntity.toDomain(): ChatMessage =
     ChatMessage(
-        id = chatId,
+        id = messageId,
         chatId = chatId,
         content = content,
         createdAt = Instant.fromEpochMilliseconds(timestamp),
         senderId = senderId,
-        deliveryStatus = ChatMessageDeliveryStatus.SENT
+        deliveryStatus = ChatMessageDeliveryStatus.valueOf(deliveryStatus)
     )
 
-fun ChatMessage.toNewMessage(): OutgoingWebSocket.NewMessage =
-    OutgoingWebSocket.NewMessage(
+fun ChatMessage.toNewMessage(): OutgoingWebSocketDto.NewMessage =
+    OutgoingWebSocketDto.NewMessage(
         messageId = id,
         chatId = chatId,
         content = content,
@@ -68,14 +68,14 @@ fun IncomingWebSocketDto.NewMessageDto.toEntity(): ChatMessageEntity =
         deliveryStatus = ChatMessageDeliveryStatus.SENT.name
     )
 
-fun OutgoingNewMessage.toWebSocketDto(): OutgoingWebSocket.NewMessage =
-    OutgoingWebSocket.NewMessage(
+fun OutgoingNewMessage.toWebSocketDto(): OutgoingWebSocketDto.NewMessage =
+    OutgoingWebSocketDto.NewMessage(
         chatId = chatId,
         messageId = messageId,
         content = content
     )
 
-fun OutgoingWebSocket.NewMessage.toEntity(
+fun OutgoingWebSocketDto.NewMessage.toEntity(
     senderId: String,
     deliveryStatus: ChatMessageDeliveryStatus
 ): ChatMessageEntity =

@@ -7,7 +7,7 @@ enum class OutgoingWebSocketType {
 }
 
 @Serializable
-sealed class OutgoingWebSocket(
+sealed class OutgoingWebSocketDto(
     val type: OutgoingWebSocketType
 ) {
     @Serializable
@@ -15,5 +15,5 @@ sealed class OutgoingWebSocket(
         val chatId: String,
         val messageId: String,
         val content: String
-    ) : OutgoingWebSocket(OutgoingWebSocketType.NEW_MESSAGE)
+    ) : OutgoingWebSocketDto(OutgoingWebSocketType.NEW_MESSAGE)
 }

@@ -1,6 +1,6 @@
 package de.mindmarket.chat.data.message
 
-import de.mindmarket.chat.data.dto.websocket.OutgoingWebSocket
+import de.mindmarket.chat.data.dto.websocket.OutgoingWebSocketDto
 import de.mindmarket.chat.data.dto.websocket.WebSocketMessageDto
 import de.mindmarket.chat.data.mappers.toDomain
 import de.mindmarket.chat.data.mappers.toEntity
@@ -25,7 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlin.time.Clock
@@ -78,17 +77,17 @@ class OfflineFirstMessageRepository(
                 senderId = localUser.id,
                 deliveryStatus = ChatMessageDeliveryStatus.SENDING
             )
+
             database.chatMessageDao.upsertMessage(entity)
 
             return webSocketConnector
                 .sendMessage(dto.toJsonPayload())
-                .onFailure { error ->
+                .onFailure {
                     applicationScope.launch {
-                        database.chatMessageDao.upsertMessage(
-                            dto.toEntity(
-                                senderId = localUser.id,
-                                deliveryStatus = ChatMessageDeliveryStatus.FAILED
-                            )
+                        database.chatMessageDao.updateDeliveryStatus(
+                            messageId = entity.messageId,
+                            status = ChatMessageDeliveryStatus.FAILED.name,
+                            timestamp = Clock.System.now().toEpochMilliseconds()
                         )
                     }.join()
                 }
@@ -103,8 +102,37 @@ class OfflineFirstMessageRepository(
         }
     }
 
-    private fun OutgoingWebSocket.NewMessage.toJsonPayload(): String {
+    override suspend fun retryMessage(messageId: String): EmptyResult<DataError> {
+        return safeDatabaseUpdate {
+            val message = database.chatMessageDao.getMessageById(messageId)
+                ?: return Result.Failure(DataError.Local.NOT_FOUND)
+            database.chatMessageDao.updateDeliveryStatus(
+                messageId = messageId,
+                timestamp = Clock.System.now().toEpochMilliseconds(),
+                status = ChatMessageDeliveryStatus.SENDING.name
+            )
 
+            val outgoingNewMessage = OutgoingWebSocketDto.NewMessage(
+                chatId = message.chatId,
+                messageId = messageId,
+                content = message.content
+            )
+
+            return webSocketConnector
+                .sendMessage(outgoingNewMessage.toJsonPayload())
+                .onFailure {
+                    applicationScope.launch {
+                        database.chatMessageDao.updateDeliveryStatus(
+                            messageId = messageId,
+                            status = ChatMessageDeliveryStatus.FAILED.name,
+                            timestamp = Clock.System.now().toEpochMilliseconds()
+                        )
+                    }.join()
+                }
+        }
+    }
+
+    private fun OutgoingWebSocketDto.NewMessage.toJsonPayload(): String {
         val webSocketMessage = WebSocketMessageDto(
             type = type.name,
             payload = json.encodeToString(this)

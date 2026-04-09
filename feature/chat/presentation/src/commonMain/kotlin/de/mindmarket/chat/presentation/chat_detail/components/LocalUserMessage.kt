@@ -43,10 +43,7 @@ fun LocalUserMessage(
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.End)
     ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-        ) {
+        Box {
             ChirpChatBubble(
                 messageContent = message.content,
                 sender = stringResource(Res.string.you),
@@ -71,7 +68,6 @@ fun LocalUserMessage(
                         icon = Icons.Default.Delete,
                         contentColor = MaterialTheme.colorScheme.extended.destructiveHover,
                         onClick = onDeleteClick
-
                     )
                 )
             )

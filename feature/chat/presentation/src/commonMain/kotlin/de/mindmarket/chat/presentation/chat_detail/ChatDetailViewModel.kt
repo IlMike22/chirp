@@ -11,6 +11,7 @@ import de.mindmarket.chat.domain.models.ConnectionState
 import de.mindmarket.chat.domain.models.OutgoingNewMessage
 import de.mindmarket.chat.presentation.chat_detail.components.ChatDetailAction
 import de.mindmarket.chat.presentation.mappers.toUi
+import de.mindmarket.chat.presentation.model.MessageUi
 import de.mindmarket.core.domain.auth.SessionStorage
 import de.mindmarket.core.domain.util.onFailure
 import de.mindmarket.core.domain.util.onSuccess
@@ -73,7 +74,8 @@ class ChatDetailViewModel(
             return@combine ChatDetailState()
         }
         currentState.copy(
-            chatUi = chatInfo.chat.toUi(authInfo.user.id)
+            chatUi = chatInfo.chat.toUi(authInfo.user.id),
+            messages = chatInfo.messages.map { it.toUi(authInfo.user.id) }
         )
     }
 
@@ -111,18 +113,30 @@ class ChatDetailViewModel(
             ChatDetailAction.OnDismissMessageMenu -> {}
             ChatDetailAction.OnLeaveChatClick -> onLeaveChatClick()
             is ChatDetailAction.OnMessageLongClick -> {}
-            is ChatDetailAction.OnRetryClick -> {}
+            is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
             ChatDetailAction.OnScrollToTop -> {}
             ChatDetailAction.OnSendMessageClick -> sendMessage()
+        }
+    }
+
+    private fun retryMessage(message: MessageUi.LocalUserMessage) {
+        viewModelScope.launch {
+            messageRepository
+                .retryMessage(message.id)
+                .onFailure { error ->
+                    eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
+                }
         }
     }
 
     private fun observeCanSendMessage() {
         canSendMessage
             .onEach { canSend ->
-                _state.update { it.copy(
-                    canSendMessage = canSend
-                ) }
+                _state.update {
+                    it.copy(
+                        canSendMessage = canSend
+                    )
+                }
             }.launchIn(viewModelScope)
     }
 
@@ -163,19 +177,6 @@ class ChatDetailViewModel(
                     messageRepository
                         .getMessagesForChat(chatId)
                 } else emptyFlow()
-            }
-            .combine(sessionStorage.observeAuthInfo()) { messages, authInfo ->
-                if (authInfo == null) {
-                    return@combine messages
-                }
-
-                _state.update {
-                    it.copy(
-                        messages = messages.map { it.toUi(authInfo.user.id) }
-                    )
-                }
-
-                messages
             }
 
         val isNearBottom = state.map { it.isNearBottom }.distinctUntilChanged()
