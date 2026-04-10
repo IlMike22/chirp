@@ -1,6 +1,5 @@
 package de.mindmarket.chat.presentation.chat_detail.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,13 +18,13 @@ import de.mindmarket.chat.presentation.util.getChatBubbleColorForUser
 import de.mindmarket.core.designsystem.components.avatar.ChatParticipantUi
 import de.mindmarket.core.designsystem.theme.ChirpTheme
 import de.mindmarket.core.designsystem.theme.extended
-import de.mindmarket.core.designsystem.theme.labelXSmall
 import de.mindmarket.core.presentation.util.UiText
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MessageListItemUi(
     messageUi: MessageUi,
+    messageWithOpenMenu: MessageUi.LocalUserMessage?,
     onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
     onDismissMessageMenu: () -> Unit,
     onDeleteClick: (MessageUi.LocalUserMessage) -> Unit,
@@ -45,6 +44,7 @@ fun MessageListItemUi(
             is MessageUi.LocalUserMessage -> {
                 LocalUserMessage(
                     message = messageUi,
+                    messageWithOpenMenu = messageWithOpenMenu,
                     onMessageLongClick = {onMessageLongClick(messageUi)},
                     onDeleteClick = { onDeleteClick(messageUi) },
                     onDismissMessageMenu = onDismissMessageMenu,
@@ -101,6 +101,7 @@ fun MessageListItemUiDateSeparatorPreview() {
             ),
             onMessageLongClick = {},
             onDismissMessageMenu = {},
+            messageWithOpenMenu = null,
             onDeleteClick = {},
             onRetryClick = {}
         )
@@ -116,13 +117,13 @@ fun MessageListItemLocalUserMessageUiPreview() {
                 id = "2",
                 content = "This is some longer content to see if everything looks good.",
                 deliveryStatus = ChatMessageDeliveryStatus.FAILED,
-                isMenuOpen = true,
                 formattedSentTime = UiText.DynamicString("Today")
             ),
             onMessageLongClick = {},
             onDismissMessageMenu = {},
             onDeleteClick = {},
             onRetryClick = {},
+            messageWithOpenMenu = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
@@ -146,6 +147,7 @@ fun MessageListItemOtherUserMessagePreview() {
                 formattedSentTime = UiText.DynamicString("Today")
             ),
             onMessageLongClick = {},
+            messageWithOpenMenu = null,
             onDismissMessageMenu = {},
             onDeleteClick = {},
             onRetryClick = {}

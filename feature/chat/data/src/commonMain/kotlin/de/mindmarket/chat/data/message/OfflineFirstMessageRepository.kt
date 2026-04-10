@@ -102,6 +102,15 @@ class OfflineFirstMessageRepository(
         }
     }
 
+    override suspend fun deleteMessage(messageId: String): EmptyResult<DataError.Remote> {
+        return service.deleteMessage(messageId)
+            .onSuccess {
+                applicationScope.launch {
+                    database.chatMessageDao.deleteMessageById(messageId)
+                }.join()
+            }
+    }
+
     override suspend fun retryMessage(messageId: String): EmptyResult<DataError> {
         return safeDatabaseUpdate {
             val message = database.chatMessageDao.getMessageById(messageId)
