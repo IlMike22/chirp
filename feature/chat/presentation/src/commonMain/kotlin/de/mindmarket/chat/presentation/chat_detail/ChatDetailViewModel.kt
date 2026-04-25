@@ -7,12 +7,15 @@ import androidx.lifecycle.viewModelScope
 import de.mindmarket.chat.domain.chat.ChatConnectionClient
 import de.mindmarket.chat.domain.chat.ChatRepository
 import de.mindmarket.chat.domain.message.MessageRepository
+import de.mindmarket.chat.domain.models.ChatMessage
 import de.mindmarket.chat.domain.models.ConnectionState
 import de.mindmarket.chat.domain.models.OutgoingNewMessage
 import de.mindmarket.chat.presentation.chat_detail.components.ChatDetailAction
 import de.mindmarket.chat.presentation.mappers.toUi
 import de.mindmarket.chat.presentation.model.MessageUi
 import de.mindmarket.core.domain.auth.SessionStorage
+import de.mindmarket.core.domain.util.DataErrorException
+import de.mindmarket.core.domain.util.Paginator
 import de.mindmarket.core.domain.util.onFailure
 import de.mindmarket.core.domain.util.onSuccess
 import de.mindmarket.core.presentation.util.toUiText
@@ -56,8 +59,17 @@ class ChatDetailViewModel(
             !isMessageBlank && connectionState == ConnectionState.CONNECTED
         }
 
+    private var currentPaginator: Paginator<String?, ChatMessage>? = null
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private val chatInfoFlow = _chatId
+        .onEach { chatId ->
+            if (chatId != null) {
+                setupPaginatorForChat(chatId)
+            } else {
+                currentPaginator = null
+            }
+        }
         .flatMapLatest { chatId ->
             if (chatId != null) {
                 chatRepository
@@ -238,6 +250,44 @@ class ChatDetailViewModel(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun setupPaginatorForChat(chatId: String) {
+        currentPaginator = Paginator(
+            initialKey = null,
+            onLoadUpdated = { isLoading ->
+                _state.update { it.copy(isLoading = isLoading) }
+            },
+            onRequest = { beforeTimestamp ->
+                messageRepository.fetchMessages(chatId, beforeTimestamp)
+            },
+            getNextKey = { messages ->
+                messages.minOfOrNull { it.createdAt }?.toString()
+            },
+            onError = { throwable ->
+                if (throwable is DataErrorException) {
+                    eventChannel.send(ChatDetailEvent.OnError(throwable.error.toUiText()))
+                }
+            },
+            onSuccess = { messages, _ ->
+                _state.update {
+                    it.copy(
+                        endReached = messages.isEmpty()
+                    )
+                }
+            }
+        )
+
+        _state.update {
+            it.copy(
+                endReached = false,
+                isPaginationLoading = false
+            )
+        }
+
+        viewModelScope.launch {
+            currentPaginator?.loadNextItems()
+        }
     }
 
     private fun onLeaveChatClick() {
