@@ -42,6 +42,7 @@ import de.mindmarket.chat.presentation.chat_detail.components.ChatDetailAction
 import de.mindmarket.chat.presentation.chat_detail.components.ChatDetailHeader
 import de.mindmarket.chat.presentation.chat_detail.components.MessageBox
 import de.mindmarket.chat.presentation.chat_detail.components.MessageList
+import de.mindmarket.chat.presentation.chat_detail.components.PaginationScrollListener
 import de.mindmarket.chat.presentation.components.ChatHeader
 import de.mindmarket.chat.presentation.components.EmptySection
 import de.mindmarket.chat.presentation.model.ChatUi
@@ -130,6 +131,22 @@ fun ChatDetailScreen(
     val configuration = currentDeviceConfiguration()
     val messageListState = rememberLazyListState()
 
+    val realMessageItemCount = remember(state.messages) {
+        state.messages
+            .filter { it is MessageUi.LocalUserMessage || it is MessageUi.OtherUserMessage }
+            .size
+    }
+
+    PaginationScrollListener(
+        lazyListState = messageListState,
+        itemCount = realMessageItemCount,
+        isPaginationLoading = state.isPaginationLoading,
+        isEndReached = state.endReached,
+        onNearTop = {
+            onAction(ChatDetailAction.OnScrollToTop)
+        }
+    )
+
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
@@ -193,11 +210,16 @@ fun ChatDetailScreen(
                             messages = state.messages,
                             messageWithOpenMenu = state.messageWithOpenMenu,
                             listState = messageListState,
+                            isPaginationLoading = state.isPaginationLoading,
+                            paginationError = state.paginationError?.asString(),
                             onMessageLongClick = { message ->
                                 onAction(ChatDetailAction.OnMessageLongClick(message))
                             },
                             onMessageRetryClick = { message ->
                                 onAction(ChatDetailAction.OnRetryClick(message))
+                            },
+                            onRetryPaginationClick =  {
+                                onAction(ChatDetailAction.OnRetryPaginationClick)
                             },
                             onDismissMessageMenu = {
                                 onAction(ChatDetailAction.OnDismissMessageMenu)
@@ -255,6 +277,11 @@ fun ChatDetailScreen(
             }
         }
     }
+}
+
+@Composable
+fun PaginationScrollListener() {
+    TODO("Not yet implemented")
 }
 
 @Composable

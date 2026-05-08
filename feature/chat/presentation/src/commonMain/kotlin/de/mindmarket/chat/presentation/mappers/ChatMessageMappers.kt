@@ -5,6 +5,12 @@ import de.mindmarket.chat.presentation.model.MessageUi
 import de.mindmarket.chat.presentation.util.DateUtils
 import kotlinx.serialization.json.JsonNull.content
 
+fun List<MessageWithSender>.toUiList(localUserId: String): List<MessageUi> {
+    return this
+        .sortedByDescending { it.message.createdAt }
+        .map { it.toUi(localUserId) }
+}
+
 fun MessageWithSender.toUi(
     localUserId: String
 ): MessageUi {

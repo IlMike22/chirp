@@ -25,7 +25,6 @@ class Paginator<Key, Item>(
         }
 
         isMakingRequest = true
-        lastRequestKey = currentKey
         onLoadUpdated(true)
 
         try {
@@ -34,6 +33,7 @@ class Paginator<Key, Item>(
                     val newKey = getNextKey(items)
                     onSuccess(items, newKey)
                     currentKey = newKey
+                    lastRequestKey = currentKey
                 }
                 .onFailure { error ->
                     onError(DataErrorException(error))
