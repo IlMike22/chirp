@@ -3,12 +3,22 @@ package de.mindmarket.chat.presentation.mappers
 import de.mindmarket.chat.domain.models.MessageWithSender
 import de.mindmarket.chat.presentation.model.MessageUi
 import de.mindmarket.chat.presentation.util.DateUtils
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.JsonNull.content
 
 fun List<MessageWithSender>.toUiList(localUserId: String): List<MessageUi> {
     return this
         .sortedByDescending { it.message.createdAt }
-        .map { it.toUi(localUserId) }
+        .groupBy {
+            it.message.createdAt.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        }
+        .flatMap { (date, messages) ->
+            messages.map { it.toUi(localUserId) } + MessageUi.DateSeparator(
+                id = date.toString(),
+                date = DateUtils.formatDateSeparator(date)
+            )
+        }
 }
 
 fun MessageWithSender.toUi(
