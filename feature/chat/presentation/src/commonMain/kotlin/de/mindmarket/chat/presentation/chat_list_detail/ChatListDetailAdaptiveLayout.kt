@@ -20,6 +20,7 @@ import de.mindmarket.chat.presentation.chat_detail.ChatDetailRoot
 import de.mindmarket.chat.presentation.chat_list.ChatListScreenRoot
 import de.mindmarket.chat.presentation.components.manage_chat.ManageChatRoot
 import de.mindmarket.chat.presentation.create_chat.CreateChatRoot
+import de.mindmarket.chat.presentation.profile.ProfileScreenRoot
 import de.mindmarket.core.designsystem.theme.extended
 import de.mindmarket.core.presentation.util.DialogSheetScopedViewModel
 import kotlinx.coroutines.launch
@@ -129,6 +130,16 @@ fun ChatListDetailAdaptiveLayout(
                 chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
 
             },
+            onDismiss = {
+                chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
+            }
+        )
+    }
+
+    DialogSheetScopedViewModel(
+        visible = sharedState.dialogState is DialogState.Profile
+    ) {
+        ProfileScreenRoot(
             onDismiss = {
                 chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
             }

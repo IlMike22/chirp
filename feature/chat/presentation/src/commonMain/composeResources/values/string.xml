@@ -11,6 +11,8 @@
     <string name="profile_settings">Profile settings</string>
     <string name="logout">Logout</string>
     <string name="sending">Sending..</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
     <string name="sent">Sent</string>
     <string name="failed">Failed</string>
     <string name="retry">Retry</string>
@@ -39,4 +41,15 @@
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="yesterday_x">Yesterday,  %1s</string>
+    <string name="show_password">Show password</string>
+    <string name="new_password">New password</string>
+    <string name="current_password">Current password</string>
+    <string name="password_hint">Use 9+ characters at least one digit and one uppercase letter</string>
+    <string name="hide_password">Hide password</string>
+    <string name="profile_image">Profile image</string>
+    <string name="upload_image">Upload images</string>
+    <string name="delete">Delete</string>
+    <string name="contact_chirp_support_change_email">Contact the chirp support to change your mail</string>
+    <string name="delete_profile_picture">Delete profile image</string>
+    <string name="delete_profile_picture_description">Are you sure you want to delete your profile picture?</string>
 </resources>
