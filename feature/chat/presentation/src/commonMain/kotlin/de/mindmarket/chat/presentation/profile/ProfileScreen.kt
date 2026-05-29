@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirp.feature.chat.presentation.generated.resources.Res
@@ -34,6 +35,7 @@ import chirp.feature.chat.presentation.generated.resources.delete_profile_pictur
 import chirp.feature.chat.presentation.generated.resources.email
 import chirp.feature.chat.presentation.generated.resources.new_password
 import chirp.feature.chat.presentation.generated.resources.password
+import chirp.feature.chat.presentation.generated.resources.password_change_successful
 import chirp.feature.chat.presentation.generated.resources.password_hint
 import chirp.feature.chat.presentation.generated.resources.profile_image
 import chirp.feature.chat.presentation.generated.resources.save
@@ -51,6 +53,7 @@ import de.mindmarket.core.designsystem.components.dialogs.DestructiveConfirmatio
 import de.mindmarket.core.designsystem.components.textfields.ChirpPasswordTextField
 import de.mindmarket.core.designsystem.components.textfields.ChirpTextField
 import de.mindmarket.core.designsystem.theme.ChirpTheme
+import de.mindmarket.core.designsystem.theme.extended
 import de.mindmarket.core.presentation.util.DeviceConfiguration
 import de.mindmarket.core.presentation.util.clearFocusOnTap
 import de.mindmarket.core.presentation.util.currentDeviceConfiguration
@@ -192,8 +195,7 @@ fun ProfileScreen(
                     onAction(ProfileAction.OnToggleCurrentPasswordVisibility)
                 },
                 placeholder = stringResource(Res.string.current_password),
-                isError = state.currentPasswordError != null,
-                supportingText = state.currentPasswordError?.asString()
+                isError = state.newPasswordError != null,
             )
 
             ChirpPasswordTextField(
@@ -208,6 +210,17 @@ fun ProfileScreen(
                 supportingText = state.newPasswordError?.asString()
                     ?: stringResource(Res.string.password_hint)
             )
+
+            if (state.isPasswordChangeSuccessful) {
+                Text(
+                    text = stringResource(Res.string.password_change_successful),
+                    color = MaterialTheme.colorScheme.extended.success,
+                    style = MaterialTheme.typography.labelSmall,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),

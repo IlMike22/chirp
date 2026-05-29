@@ -52,4 +52,7 @@
     <string name="contact_chirp_support_change_email">Contact the chirp support to change your mail</string>
     <string name="delete_profile_picture">Delete profile image</string>
     <string name="delete_profile_picture_description">Are you sure you want to delete your profile picture?</string>
+    <string name="error_current_password_incorrect">Your current password is incorrect.</string>
+    <string name="error_current_password_equal_to_new_one">Your new password must not match your old password.</string>
+    <string name="password_change_successful">You successfully changed your password!</string>
 </resources>

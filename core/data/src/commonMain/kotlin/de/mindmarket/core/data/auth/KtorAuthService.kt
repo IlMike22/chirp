@@ -1,6 +1,7 @@
 package de.mindmarket.core.data.auth
 
 import de.mindmarket.core.data.dto.AuthInfoSerializable
+import de.mindmarket.core.data.dto.requests.ChangePasswordRequest
 import de.mindmarket.core.data.dto.requests.EmailRequest
 import de.mindmarket.core.data.dto.requests.LoginRequest
 import de.mindmarket.core.data.dto.requests.RegisterRequest
@@ -79,6 +80,19 @@ class KtorAuthService(
             body = ResetPasswordRequest(
                 newPassword = newPassword,
                 token = token
+            )
+        )
+    }
+
+    override suspend fun changePassword(
+        currentPassword: String,
+        newPassword: String
+    ): EmptyResult<DataError.Remote> {
+        return httpClient.post(
+            route = "/auth/change-password",
+            body = ChangePasswordRequest(
+                newPassword = newPassword,
+                oldPassword = currentPassword
             )
         )
     }
