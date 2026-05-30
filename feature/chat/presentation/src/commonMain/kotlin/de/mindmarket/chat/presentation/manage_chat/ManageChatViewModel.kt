@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.error_participant_not_found
-import de.mindmarket.chat.domain.chat.ChatParticipantService
+import de.mindmarket.chat.domain.participant.ChatParticipantService
 import de.mindmarket.chat.domain.chat.ChatRepository
 import de.mindmarket.chat.presentation.components.manage_chat.ManageChatAction
 import de.mindmarket.chat.presentation.components.manage_chat.ManageChatEvent
